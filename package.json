@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "pages:dev": "npx wrangler pages dev dist --compatibility-date=2026-03-09",
+    "pages:preview": "npm run build && npm run pages:dev",
     "lint": "eslint .",
     "preview": "vite preview"
   },

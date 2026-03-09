@@ -109,7 +109,7 @@ function App() {
       let nextResult;
 
       try {
-        const response = await fetch('/api/analyze', {
+        const response = await fetch('/api/analyze-free', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -117,11 +117,13 @@ function App() {
           body: JSON.stringify(payload),
         });
 
-        if (!response.ok) {
-          throw new Error('API response was not ok');
+        const body = await response.json();
+
+        if (!response.ok || !body?.ok) {
+          throw new Error(body?.error?.message || 'API response was not ok');
         }
 
-        nextResult = await response.json();
+        nextResult = body.data;
       } catch (fetchError) {
         nextResult = await mockAnalyze(payload);
         setNotice(t('fallbackNotice'));
