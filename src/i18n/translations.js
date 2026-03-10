@@ -338,8 +338,9 @@ export const translations = {
     validationName: '이름을 입력해 주세요.',
     validationBirthdate: '생년월일을 입력해 주세요.',
     validationConsent: '개인정보 및 안내 사항 동의가 필요합니다.',
-    fallbackNotice: '실시간 분석 서버 연결에 실패해 샘플 분석 결과를 표시했습니다.',
-    networkError: '분석 요청 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.',
+    fallbackNotice: '로컬 프리뷰 환경이라 샘플 분석 결과를 표시했습니다.',
+    networkError:
+      '실제 분석 서버를 사용할 수 없습니다. 운영 환경 변수와 OpenAI API 설정을 확인한 뒤 다시 시도해 주세요.',
   },
   en: {
     pageTitle: 'K-Destiny | Korean Fortune Personality Test and Destiny Type Reading',
@@ -677,8 +678,9 @@ export const translations = {
     validationName: 'Please enter your name.',
     validationBirthdate: 'Please enter your birth date.',
     validationConsent: 'You must agree to the privacy notice to continue.',
-    fallbackNotice: 'The live analysis server was unavailable, so a mock result was shown instead.',
-    networkError: 'The analysis request failed. Please try again shortly.',
+    fallbackNotice: 'A mock result was shown because this is a local preview environment.',
+    networkError:
+      'The live analysis service is unavailable. Check the production environment variables and OpenAI API configuration, then try again.',
   },
   ja: {
     pageTitle: 'K-Destiny | あなたの韓国式運命タイプを見つけましょう',

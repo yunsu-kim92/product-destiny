@@ -36,6 +36,15 @@ const initialFormData = {
   consent: false,
 };
 
+function isLocalPreview() {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  const hostname = window.location.hostname;
+  return hostname === 'localhost' || hostname === '127.0.0.1';
+}
+
 function getCurrentPath() {
   if (typeof window === 'undefined') {
     return '/';
@@ -357,8 +366,12 @@ function App() {
 
         nextResult = body.data;
       } catch (fetchError) {
-        nextResult = await mockAnalyze(payload);
-        setNotice(t('fallbackNotice'));
+        if (isLocalPreview()) {
+          nextResult = await mockAnalyze(payload);
+          setNotice(t('fallbackNotice'));
+        } else {
+          throw fetchError;
+        }
       }
 
       setSubmittedName(payload.name || 'Guest');
