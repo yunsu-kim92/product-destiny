@@ -3,9 +3,6 @@ export const DEFAULT_LANGUAGE = 'ko';
 export const LANGUAGES = [
   { value: 'ko', label: '한국어' },
   { value: 'en', label: 'English' },
-  { value: 'ja', label: '日本語' },
-  { value: 'zh', label: '中文' },
-  { value: 'es', label: 'Español' },
 ];
 
 export const translations = {
@@ -329,8 +326,11 @@ export const translations = {
     pageDescription:
       'Discover your Korean Destiny Type with AI. Ancient Korean insight reimagined as a modern premium report experience.',
     'nav.analyze': 'Analyze',
+    'nav.guide': 'Guide',
     'nav.results': 'Results',
+    'nav.about': 'About',
     'nav.partnership': 'Partnership',
+    'nav.faq': 'FAQ',
     'nav.comments': 'Comments',
     'nav.policy': 'Policy',
     'nav.languageLabel': 'Select language',
@@ -340,12 +340,12 @@ export const translations = {
     'hero.title2': 'Your Korean Destiny Type',
     'hero.title3': 'Now',
     'hero.desc':
-      'K-Destiny reframes Korean insight as a modern analysis experience. Enter your name and birth details to unlock a free destiny type first, then guide users into a premium locked report.',
-    'hero.cta1': 'Reveal My Destiny Type',
-    'hero.cta2': 'Preview Result Flow',
-    'hero.proof1': 'Free result in under 60 seconds',
-    'hero.proof2': 'Input-to-analysis service flow',
-    'hero.proof3': 'Premium report conversion design',
+      'K-Destiny is a guided reading service that turns familiar Korean-style personality interpretation into a clean, readable web experience. Based on a few basic details, it presents your core tendencies, relationship flow, and life rhythm in a structured format.',
+    'hero.cta1': 'Read My Profile',
+    'hero.cta2': 'See Service Guide',
+    'hero.proof1': 'Clear input and reading criteria',
+    'hero.proof2': 'Readable result structure',
+    'hero.proof3': 'Policy and contact information available',
     'sample.label': 'Sample free result',
     'sample.pill': 'FREE DESTINY TYPE',
     'sample.title': 'The Strategist',
@@ -362,7 +362,7 @@ export const translations = {
     'form.kicker': 'Step 1. Input',
     'form.title': 'Start your destiny analysis',
     'form.desc':
-      'This input structure is ready for a real service flow. Capture only essential data, reveal a free result first, then route users into a locked premium report.',
+      'This form lets you read a basic profile based on your name and birth date. Enter a few essential details to see a summary and key indicators first.',
     'form.name': 'Name',
     'form.namePlaceholder': 'Enter your name',
     'form.birthdate': 'Birth date',
@@ -380,7 +380,26 @@ export const translations = {
     'form.submit': 'Reveal My Destiny Type',
     'form.secondaryCta': 'See Result Flow',
     'form.note':
-      'Before the backend is ready, the UI tries the real `/api/analyze` request first and immediately falls back to mock data if it fails.',
+      'Entered information is used only for result generation and anonymous service-improvement analytics.',
+    'editorial.kicker': 'Guide',
+    'editorial.title': 'How this site structures its content',
+    'editorial.desc':
+      'Rather than relying on vague teaser copy, the site is designed to provide explanatory content that users can actually understand and review.',
+    'editorial.card1Title': 'Original explanatory content',
+    'editorial.card1Desc':
+      'Result copy is rewritten around a Korean-style personality reading framework and presented with both context and summary on the same page.',
+    'editorial.card2Title': 'Easy-to-follow structure',
+    'editorial.card2Desc':
+      'Visitors can move through input, guide, results, FAQ, contact, and policy sections in a clear order.',
+    'editorial.card3Title': 'Operational transparency',
+    'editorial.card3Desc':
+      'Privacy handling, contact paths, advertising setup, and service scope are explained directly on the site.',
+    'editorial.checkTitle': 'Operating checklist',
+    'editorial.checkBadge': 'Check',
+    'editorial.point1': 'Explain the service purpose and interpretation scope before collecting input.',
+    'editorial.point2': 'Keep the main content and result explanation ahead of advertising.',
+    'editorial.point3': 'Provide separate paths for policy, inquiries, and public feedback.',
+    'editorial.point4': 'Keep major information consolidated without redundant thin pages.',
     'flow.kicker': 'Service Flow',
     'flow.step1Title': 'Collect input details',
     'flow.step1Desc':
@@ -425,19 +444,43 @@ export const translations = {
     'locked.overlayDesc':
       'This is a preview state only. Connect this block to payment and remove the lock after success.',
     'locked.cta': 'View Full Result',
-    'locked.note': 'This is currently a pre-payment prototype.',
+    'locked.note': 'Expanded interpretation will be announced separately once the service policy is finalized.',
+    'faq.kicker': 'FAQ',
+    'faq.title': 'Frequently asked questions before use',
+    'faq.desc':
+      'This section answers the questions visitors usually check first, including input usage, how to read results, and where to send inquiries.',
+    'faq.q1': 'What does this service provide?',
+    'faq.a1':
+      'This site provides a guided result page that reads personality tendencies and life flow from your name and birth details. It is reference content, not medical, legal, or investment advice.',
+    'faq.q2': 'How is the entered information used?',
+    'faq.a2':
+      'Entered information is used only for result generation and anonymous service-improvement analytics. No extra sensitive identity data is requested.',
+    'faq.q3': 'How should I read the results?',
+    'faq.a3':
+      'Use the core type as a summary, then treat the indicators and preview paragraphs as reference material for reviewing your own habits and patterns.',
+    'faq.q4': 'Where do I send inquiries or partnership proposals?',
+    'faq.a4':
+      'You can use the inquiry form near the bottom of the home page, and public feedback can also be left in the comments section.',
     'policy.kicker': 'Policy',
-    'policy.title': 'Essential policy links for launch',
+    'policy.title': 'Service policies and guidance',
     'policy.desc':
-      'When the backend and legal pages are ready, replace these placeholders with the real URLs.',
+      'To support a trustworthy user experience, the site summarizes what is collected, what is provided, and how inquiries are handled.',
     'policy.privacyTitle': 'Privacy Policy',
     'policy.privacyDesc': 'Explain collected fields, retention, and usage scope.',
+    'policy.privacyDetail':
+      'Name, birth date, and optional profile fields are used only for result generation and service quality review. No extra sensitive identity data is requested.',
     'policy.termsTitle': 'Terms of Service',
     'policy.termsDesc': 'Define service conditions and responsibilities.',
+    'policy.termsDetail':
+      'Results are reference-oriented interpretation content and do not replace medical, legal, or financial decisions. Users should treat them as personal reading material.',
     'policy.refundTitle': 'Refund Policy',
     'policy.refundDesc': 'Clarify refund rules for digital report products.',
+    'policy.refundDetail':
+      'If paid features are introduced later, the scope, delivery timing, and refund conditions will be clearly shown before payment. No hidden billing flow is used beforehand.',
     'policy.contactTitle': 'Contact',
     'policy.contactDesc': 'Connect support and partnership channels.',
+    'policy.contactDetail':
+      'General inquiries and partnership proposals can be sent through the contact form, while public feedback can be reviewed through the comments section.',
     'partnership.kicker': 'Partnership',
     'partnership.title': 'Brand and partnership inquiries',
     'partnership.desc':
@@ -476,11 +519,120 @@ export const translations = {
     'comments.noscript.prefix': 'Please enable JavaScript to view the',
     'comments.noscript.link': 'comments powered by Disqus.',
     'footer.left':
-      '© 2026 K-Destiny. Korean insight reimagined as a premium report experience.',
-    'footer.right': 'Static prototype for Cloudflare Pages + GitHub auto deploy.',
+      '© 2026 K-Destiny. Korean-style personality interpretation presented as readable explanatory content.',
+    'footer.right': 'A guided service page with public policy, inquiry, and feedback paths.',
+    'footer.about': 'About the Service',
+    'about.metaTitle': 'K-Destiny | About',
+    'about.metaDescription':
+      'Learn how K-Destiny structures its readings, editorial standards, and operating principles.',
+    'about.title': 'About K-Destiny',
+    'about.desc':
+      'K-Destiny is a guided web service that organizes Korean-style personality interpretation into readable, user-facing content.',
+    'about.cta': 'See results on the home page',
+    'about.section1Title': 'Service purpose',
+    'about.section1Body1':
+      'The site aims to make a familiar Korean-style reading format easier to understand and navigate on the web.',
+    'about.section1Body2':
+      'With a short input flow, visitors can check a concise summary and review their tendencies through structured result copy.',
+    'about.section2Title': 'Content standards',
+    'about.section2Body1':
+      'Result text is written as explanatory content with context and practical reading cues rather than vague promotional phrases.',
+    'about.section2Body2':
+      'The page keeps actual interpretation content ahead of advertising, partnership, and support information.',
+    'about.section3Title': 'Operating principles',
+    'about.section3Body1':
+      'Collected information and service scope are disclosed openly, and separate policy pages explain privacy handling and usage conditions.',
+    'about.section3Body2':
+      'Visitor feedback is accepted through public comments and inquiry forms so the service can be reviewed and improved over time.',
+    'privacy.metaTitle': 'K-Destiny | Privacy Policy',
+    'privacy.metaDescription':
+      'Information about what K-Destiny collects, why it is used, and how it is handled.',
+    'privacy.title': 'Privacy Policy',
+    'privacy.desc':
+      'This page explains what information is collected during use, why it is collected, and how narrowly it is handled.',
+    'privacy.cta': 'Go to contact page',
+    'privacy.section1Title': 'Collected data',
+    'privacy.section1Body1':
+      'Basic input fields may include name, birth date, birth time, gender, and selected language. Some of these fields are optional.',
+    'privacy.section1Body2':
+      'The inquiry form may collect company name, contact name, email, phone number, and message details.',
+    'privacy.section2Title': 'Purpose of use',
+    'privacy.section2Body1':
+      'Collected data is used only for result generation, inquiry replies, and anonymous service-quality review.',
+    'privacy.section2Body2':
+      'No extra sensitive identity data or payment information is requested, and the data is not used outside those purposes.',
+    'privacy.section3Title': 'Retention and management',
+    'privacy.section3Body1':
+      'Information is handled only within the minimum range necessary for operation, and unnecessary long-term retention is avoided.',
+    'privacy.section3Body2':
+      'If the policy changes, the public notice on this page is updated so visitors can review the latest version easily.',
+    'terms.metaTitle': 'K-Destiny | Terms of Service',
+    'terms.metaDescription':
+      'Guidance on the scope of use and responsibility limits for K-Destiny.',
+    'terms.title': 'Terms of Service',
+    'terms.desc':
+      'This page outlines the nature of the content, the expected range of use, and the limits of operator responsibility.',
+    'terms.section1Title': 'Nature of the service',
+    'terms.section1Body1':
+      'K-Destiny results are reference-oriented interpretation content and do not replace medical, legal, tax, or investment advice.',
+    'terms.section1Body2':
+      'Users should treat the results as personal reading material and seek separate expert review for important decisions.',
+    'terms.section2Title': 'User responsibility',
+    'terms.section2Body1':
+      'Users are responsible for checking the accuracy of the information they enter and should not submit another person’s data without permission.',
+    'terms.section2Body2':
+      'Comments and inquiry content must not violate the rights of others or applicable laws.',
+    'terms.section3Title': 'Limits of operator responsibility',
+    'terms.section3Body1':
+      'The operator works to improve service stability and information quality, but cannot guarantee against every external network or third-party service issue.',
+    'terms.section3Body2':
+      'If needed, the service structure, features, and policy notices may be updated, and those changes will be reflected on the site.',
+    'refund.metaTitle': 'K-Destiny | Refund Policy',
+    'refund.metaDescription':
+      'The principles that will apply if paid features are introduced in the future.',
+    'refund.title': 'Refund Policy',
+    'refund.desc':
+      'Current public features are free informational content. This page explains the refund approach that would apply if paid features are added later.',
+    'refund.section1Title': 'Current service status',
+    'refund.section1Body1':
+      'The currently published core results and informational content on the main page are provided free of charge.',
+    'refund.section1Body2':
+      'Before any payment feature is introduced, the site does not use hidden or forced billing flows.',
+    'refund.section2Title': 'Principles for future paid features',
+    'refund.section2Body1':
+      'If paid reports or extra features are introduced, the product scope, delivery timing, and refund conditions will be shown clearly before payment.',
+    'refund.section2Body2':
+      'Because digital content may be partially delivered immediately, any future refund guidance will distinguish delivered and undelivered portions where relevant.',
+    'refund.section3Title': 'Inquiry process',
+    'refund.section3Body1':
+      'Payment-related questions will be accepted through a dedicated contact path or official inquiry channel once such features exist.',
+    'refund.section3Body2':
+      'When payment is actually introduced, the site will also publish information about payment methods, processing times, and exception cases.',
+    'contact.metaTitle': 'K-Destiny | Contact',
+    'contact.metaDescription':
+      'Guidance for general inquiries, partnership proposals, and public feedback channels.',
+    'contact.title': 'Contact Information',
+    'contact.desc':
+      'This page explains which channel to use for site questions, partnership proposals, and public feedback.',
+    'contact.cta': 'Open the inquiry form on the home page',
+    'contact.section1Title': 'General inquiries',
+    'contact.section1Body1':
+      'If you find an issue or want to suggest an improvement, you can send it through the inquiry form on the home page.',
+    'contact.section1Body2':
+      'Messages are reviewed according to operational needs, and replies may be sent when a valid contact address is provided.',
+    'contact.section2Title': 'Partnership and business proposals',
+    'contact.section2Body1':
+      'Brand campaigns, content partnerships, and referral proposals are easier to review when the company name and proposal goal are included.',
+    'contact.section2Body2':
+      'For advertising or co-marketing proposals, including the desired schedule and scope is recommended.',
+    'contact.section3Title': 'Public feedback',
+    'contact.section3Body1':
+      'General user reactions, reviews, and open discussion can be shared through the comments section.',
+    'contact.section3Body2':
+      'In public areas, it is better to focus on product feedback rather than posting personal data or sensitive contractual information.',
     loadingMessage: 'Analyzing your destiny type...',
     unlockAlert:
-      'This is a payment-placeholder prototype. Connect this button to your checkout or payment modal.',
+      'Expanded interpretation will be announced separately after the operating policy is finalized. For now, please refer to the public result and guidance sections.',
     resultMeta: 'Free result for {name}',
     validationName: 'Please enter your name.',
     validationBirthdate: 'Please enter your birth date.',

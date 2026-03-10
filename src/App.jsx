@@ -11,13 +11,17 @@ import FaqSection from './components/FaqSection.jsx';
 import PolicySection from './components/PolicySection.jsx';
 import StaticPage from './components/StaticPage.jsx';
 import Footer from './components/Footer.jsx';
-import { DEFAULT_LANGUAGE, translate } from './i18n/translations.js';
+import { DEFAULT_LANGUAGE, LANGUAGES, translate } from './i18n/translations.js';
 import { mockAnalyze } from './utils/mockAnalyze.js';
 import { validateForm } from './utils/validateForm.js';
 
+const supportedLanguages = new Set(LANGUAGES.map((languageOption) => languageOption.value));
+
 const initialLanguage =
   typeof window !== 'undefined'
-    ? window.localStorage.getItem('kdestiny-language') || DEFAULT_LANGUAGE
+    ? supportedLanguages.has(window.localStorage.getItem('kdestiny-language'))
+      ? window.localStorage.getItem('kdestiny-language')
+      : DEFAULT_LANGUAGE
     : DEFAULT_LANGUAGE;
 
 const initialFormData = {
