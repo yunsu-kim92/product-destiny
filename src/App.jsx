@@ -1,20 +1,21 @@
-import { useEffect, useRef, useState } from 'react';
+import { Suspense, lazy, useEffect, useRef, useState } from 'react';
 import Navbar from './components/Navbar.jsx';
 import HeroSection from './components/HeroSection.jsx';
 import DestinyForm from './components/DestinyForm.jsx';
 import ServiceFlowCard from './components/ServiceFlowCard.jsx';
 import ResultSection from './components/ResultSection.jsx';
-import EditorialSection from './components/EditorialSection.jsx';
-import PartnershipSection from './components/PartnershipSection.jsx';
-import CommentsSection from './components/CommentsSection.jsx';
-import FaqSection from './components/FaqSection.jsx';
-import PolicySection from './components/PolicySection.jsx';
-import StaticPage from './components/StaticPage.jsx';
 import Footer from './components/Footer.jsx';
 import { DEFAULT_LANGUAGE, LANGUAGES, translate } from './i18n/translations.js';
 import { buildPageUrl } from './seo.js';
 import { mockAnalyze } from './utils/mockAnalyze.js';
 import { validateForm } from './utils/validateForm.js';
+
+const EditorialSection = lazy(() => import('./components/EditorialSection.jsx'));
+const PartnershipSection = lazy(() => import('./components/PartnershipSection.jsx'));
+const CommentsSection = lazy(() => import('./components/CommentsSection.jsx'));
+const FaqSection = lazy(() => import('./components/FaqSection.jsx'));
+const PolicySection = lazy(() => import('./components/PolicySection.jsx'));
+const StaticPage = lazy(() => import('./components/StaticPage.jsx'));
 
 const supportedLanguages = new Set(LANGUAGES.map((languageOption) => languageOption.value));
 
@@ -102,9 +103,11 @@ function HomePage({
             </div>
           </section>
 
-          <div ref={guideSectionRef}>
-            <EditorialSection t={t} />
-          </div>
+          <Suspense fallback={null}>
+            <div ref={guideSectionRef}>
+              <EditorialSection t={t} />
+            </div>
+          </Suspense>
 
           <ResultSection
             t={t}
@@ -117,10 +120,12 @@ function HomePage({
             onScrollToLocked={onScrollToLocked}
           />
 
-          <PartnershipSection t={t} />
-          <FaqSection t={t} />
-          <CommentsSection t={t} />
-          <PolicySection t={t} />
+          <Suspense fallback={null}>
+            <PartnershipSection t={t} />
+            <FaqSection t={t} />
+            <CommentsSection t={t} />
+            <PolicySection t={t} />
+          </Suspense>
         </main>
         <Footer t={t} />
       </div>
@@ -384,12 +389,14 @@ function App() {
         <div className="container">
           <Navbar language={language} setLanguage={setLanguage} t={t} isSubpage />
           <main>
-            <StaticPage
-              title={activePage.title}
-              description={activePage.description}
-              sections={activePage.sections}
-              cta={activePage.cta}
-            />
+            <Suspense fallback={null}>
+              <StaticPage
+                title={activePage.title}
+                description={activePage.description}
+                sections={activePage.sections}
+                cta={activePage.cta}
+              />
+            </Suspense>
           </main>
           <Footer t={t} />
         </div>

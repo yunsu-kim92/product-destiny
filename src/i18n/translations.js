@@ -7,9 +7,9 @@ export const LANGUAGES = [
 
 export const translations = {
   ko: {
-    pageTitle: 'K-Destiny | 당신의 한국형 운명 타입을 발견하세요',
+    pageTitle: 'K-Destiny | 한국형 운세 성향 테스트와 운명 타입 분석',
     pageDescription:
-      'AI로 당신의 한국형 운명 타입을 발견해보세요. 한국 전통의 통찰을 현대적인 성향 분석 경험으로 재해석했습니다.',
+      '한국형 운세 해석, 성향 테스트, 운명 타입 분석을 한 페이지에서 확인해보세요. 이름과 생년 정보로 핵심 성향과 흐름을 읽어볼 수 있습니다.',
     'nav.analyze': '분석',
     'nav.guide': '운영 기준',
     'nav.results': '결과',
@@ -22,8 +22,8 @@ export const translations = {
     'common.expand': '내용 보기',
     'hero.eyebrow': 'AI가 해석한 한국형 운명 리포트',
     'hero.title1': '당신의',
-    'hero.title2': '한국형 운명 타입',
-    'hero.title3': '을 지금 확인하세요',
+    'hero.title2': '운세 성향 테스트',
+    'hero.title3': '와 운명 타입 분석',
     'hero.desc':
       'K-Destiny는 한국 문화권에서 익숙한 성향 해석 문법을 현대적인 읽기 경험으로 정리한 안내형 서비스입니다. 입력 정보를 바탕으로 핵심 성향, 관계 흐름, 일과 돈의 리듬을 한눈에 읽기 쉽게 제공합니다.',
     'hero.cta1': '내 성향 읽어보기',
@@ -322,9 +322,9 @@ export const translations = {
     networkError: '분석 요청 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.',
   },
   en: {
-    pageTitle: 'K-Destiny | Discover Your Korean Destiny Type',
+    pageTitle: 'K-Destiny | Korean Fortune Personality Test and Destiny Type Reading',
     pageDescription:
-      'Discover your Korean Destiny Type with AI. Ancient Korean insight reimagined as a modern premium report experience.',
+      'Explore Korean-style fortune reading, personality testing, and destiny type analysis in one place. Check your core tendencies and life flow from a few basic details.',
     'nav.analyze': 'Analyze',
     'nav.guide': 'Guide',
     'nav.results': 'Results',
@@ -337,8 +337,8 @@ export const translations = {
     'common.expand': 'View details',
     'hero.eyebrow': 'AI-powered Korean destiny report',
     'hero.title1': 'Discover',
-    'hero.title2': 'Your Korean Destiny Type',
-    'hero.title3': 'Now',
+    'hero.title2': 'Korean Fortune Personality Test',
+    'hero.title3': 'and Destiny Reading',
     'hero.desc':
       'K-Destiny is a guided reading service that turns familiar Korean-style personality interpretation into a clean, readable web experience. Based on a few basic details, it presents your core tendencies, relationship flow, and life rhythm in a structured format.',
     'hero.cta1': 'Read My Profile',
