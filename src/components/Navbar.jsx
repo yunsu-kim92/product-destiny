@@ -12,6 +12,7 @@ function Navbar({ language, setLanguage, t }) {
         <div className="nav-links">
           <a href="#start">{t('nav.analyze')}</a>
           <a href="#results">{t('nav.results')}</a>
+          <a href="#partnership">{t('nav.partnership')}</a>
           <a href="#policy">{t('nav.policy')}</a>
         </div>
 

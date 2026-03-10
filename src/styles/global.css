@@ -48,7 +48,8 @@ a {
 
 button,
 input,
-select {
+select,
+textarea {
   font: inherit;
 }
 
@@ -174,6 +175,11 @@ button {
 .field-input,
 .field-select {
   padding: 15px 16px;
+}
+
+.field-textarea {
+  min-height: 148px;
+  resize: vertical;
 }
 
 .field-input:focus,
@@ -749,6 +755,59 @@ h1 {
   grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.partnership-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.88fr) minmax(0, 1.12fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.partnership-card {
+  display: grid;
+  gap: 18px;
+}
+
+.partnership-highlight {
+  font-size: 18px;
+}
+
+.partnership-points {
+  display: grid;
+  gap: 12px;
+}
+
+.partnership-point {
+  display: grid;
+  gap: 4px;
+  padding: 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.partnership-point strong {
+  font-size: 15px;
+}
+
+.partnership-point span,
+.partnership-card p,
+.partnership-caption {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.partnership-form {
+  display: grid;
+  gap: 18px;
+}
+
+.partnership-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+
 .policy-link {
   padding: 20px;
   border-radius: 22px;
@@ -787,7 +846,8 @@ h1 {
 
 @media (max-width: 1080px) {
   .hero,
-  .service-grid {
+  .service-grid,
+  .partnership-layout {
     grid-template-columns: 1fr;
   }
 
