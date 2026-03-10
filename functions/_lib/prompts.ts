@@ -3,9 +3,6 @@ import type { AnalysisRequest } from './validators';
 const languageGuide: Record<AnalysisRequest['language'], string> = {
   ko: 'Write the output in Korean.',
   en: 'Write the output in English.',
-  ja: 'Write the output in Japanese.',
-  zh: 'Write the output in Simplified Chinese.',
-  es: 'Write the output in Spanish.',
 };
 
 const commonRules = `
@@ -43,16 +40,11 @@ Set fullReportLocked to false.
 }
 
 export function buildUserPrompt(payload: AnalysisRequest) {
-  return `Generate a report from this input:
-${JSON.stringify(
-  {
-    name: payload.name,
-    birthdate: payload.birthdate,
-    birthtime: payload.birthtime || '',
-    gender: payload.gender || '',
-    language: payload.language,
-  },
-  null,
-  2,
-)}`;
+  return [
+    `Name: ${payload.name}`,
+    `Birthdate: ${payload.birthdate}`,
+    `Birthtime: ${payload.birthtime || ''}`,
+    `Gender: ${payload.gender || ''}`,
+    `Language: ${payload.language}`,
+  ].join('\n');
 }

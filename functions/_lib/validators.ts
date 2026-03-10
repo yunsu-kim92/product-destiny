@@ -1,9 +1,11 @@
-export const SUPPORTED_LANGUAGES = ['ko', 'en', 'ja', 'zh', 'es'] as const;
+export const SUPPORTED_LANGUAGES = ['ko', 'en'] as const;
 
 export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
 
 export type Env = {
   OPENAI_API_KEY?: string;
+  OPENAI_PROMPT_ID?: string;
+  OPENAI_PROMPT_VERSION?: string;
 };
 
 export type AnalysisRequest = {
@@ -60,7 +62,7 @@ export function validateAnalysisInput(input: unknown): ValidationResult {
   if (!isSupportedLanguage(language)) {
     return {
       ok: false,
-      message: 'The "language" field must be one of: ko, en, ja, zh, es.',
+      message: 'The "language" field must be one of: ko, en.',
     };
   }
 

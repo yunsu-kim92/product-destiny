@@ -1006,6 +1006,20 @@ h1 {
   font-size: 20px;
 }
 
+.freshness-panel {
+  gap: 10px;
+}
+
+.freshness-panel strong {
+  font-size: 18px;
+}
+
+.freshness-panel p {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
 .footer {
   display: flex;
   justify-content: space-between;

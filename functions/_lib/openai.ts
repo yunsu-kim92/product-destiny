@@ -2,6 +2,8 @@ import { buildUserPrompt } from './prompts';
 import type { AnalysisRequest, Env } from './validators';
 
 export const OPENAI_MODEL = 'gpt-5-mini';
+export const DEFAULT_PROMPT_ID = 'pmpt_69afac7cf8708197857cfc48545f299e095889951166ccf9';
+export const DEFAULT_PROMPT_VERSION = '1';
 
 type JsonSchema = {
   type: 'object';
@@ -54,43 +56,73 @@ export async function requestStructuredOutput<T>(options: {
     throw new Error('MISSING_API_KEY');
   }
 
+  const promptId = options.env.OPENAI_PROMPT_ID || DEFAULT_PROMPT_ID;
+  const promptVersion = options.env.OPENAI_PROMPT_VERSION || DEFAULT_PROMPT_VERSION;
+  const userInputText = buildUserPrompt(options.payload);
+
+  const requestBody =
+    promptId
+      ? {
+          prompt: {
+            id: promptId,
+            version: promptVersion,
+          },
+          input: [
+            {
+              role: 'user',
+              content: [
+                {
+                  type: 'input_text',
+                  text: userInputText,
+                },
+              ],
+            },
+          ],
+          reasoning: {
+            summary: 'auto',
+          },
+          store: true,
+          include: ['reasoning.encrypted_content'],
+        }
+      : {
+          model: OPENAI_MODEL,
+          input: [
+            {
+              role: 'system',
+              content: [
+                {
+                  type: 'input_text',
+                  text: options.systemPrompt,
+                },
+              ],
+            },
+            {
+              role: 'user',
+              content: [
+                {
+                  type: 'input_text',
+                  text: userInputText,
+                },
+              ],
+            },
+          ],
+          text: {
+            format: {
+              type: 'json_schema',
+              name: options.schemaName,
+              strict: true,
+              schema: options.schema,
+            },
+          },
+        };
+
   const response = await fetch('https://api.openai.com/v1/responses', {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
       authorization: `Bearer ${apiKey}`,
     },
-    body: JSON.stringify({
-      model: OPENAI_MODEL,
-      input: [
-        {
-          role: 'system',
-          content: [
-            {
-              type: 'input_text',
-              text: options.systemPrompt,
-            },
-          ],
-        },
-        {
-          role: 'user',
-          content: [
-            {
-              type: 'input_text',
-              text: buildUserPrompt(options.payload),
-            },
-          ],
-        },
-      ],
-      text: {
-        format: {
-          type: 'json_schema',
-          name: options.schemaName,
-          strict: true,
-          schema: options.schema,
-        },
-      },
-    }),
+    body: JSON.stringify(requestBody),
   });
 
   const json = (await response.json()) as OpenAIResponseShape;

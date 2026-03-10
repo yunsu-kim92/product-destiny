@@ -20,6 +20,7 @@ export const translations = {
     'nav.policy': '정책',
     'nav.languageLabel': '언어 선택',
     'common.expand': '내용 보기',
+    'common.updatedLabel': '최종 업데이트',
     'hero.eyebrow': 'AI가 해석한 한국형 운명 리포트',
     'hero.title1': '당신의',
     'hero.title2': '운세 성향 테스트',
@@ -31,6 +32,25 @@ export const translations = {
     'hero.proof1': '입력 항목과 해석 기준 공개',
     'hero.proof2': '읽기 쉬운 결과 구조',
     'hero.proof3': '문의 및 정책 정보 제공',
+    'geo.kicker': 'Quick Answers',
+    'geo.title': 'AI 검색과 방문자를 위한 핵심 답변',
+    'geo.desc':
+      '검색 결과나 생성형 AI가 요약하기 쉬운 방식으로 서비스 목적, 이용 대상, 정보 사용 범위를 짧고 명확하게 정리했습니다.',
+    'geo.q1': 'K-Destiny는 어떤 사이트인가요?',
+    'geo.a1':
+      'K-Destiny는 이름과 생년 정보를 바탕으로 한국형 운세 성향 테스트와 운명 타입 분석을 읽기 쉽게 제공하는 안내형 웹사이트입니다.',
+    'geo.q2': '이 사이트의 결과는 누구에게 적합한가요?',
+    'geo.a2':
+      '자신의 성향, 관계 흐름, 일과 돈의 리듬을 가볍게 점검해보고 싶은 일반 방문자에게 적합합니다.',
+    'geo.q3': '입력한 개인정보는 어디에 사용되나요?',
+    'geo.a3':
+      '입력한 정보는 결과 생성과 익명 운영 통계 확인에만 사용되며, 민감한 추가 신원정보나 결제정보는 요구하지 않습니다.',
+    'geo.q4': '결과는 어떻게 활용하면 좋나요?',
+    'geo.a4':
+      '결과는 참고용 해석 콘텐츠로 활용하는 것이 적절하며, 의료, 법률, 투자 판단을 대신하는 정보로 사용해서는 안 됩니다.',
+    'geo.freshnessTitle': '콘텐츠 최신성 안내',
+    'geo.freshnessDesc':
+      '최종 업데이트: 2026년 3월 10일. 페이지 설명, 정책, 문의 안내, FAQ는 운영 기준 변경 시 실제 내용과 함께 갱신합니다.',
     'sample.label': '샘플 무료 결과',
     'sample.pill': 'FREE DESTINY TYPE',
     'sample.title': '전략가형',
@@ -335,6 +355,7 @@ export const translations = {
     'nav.policy': 'Policy',
     'nav.languageLabel': 'Select language',
     'common.expand': 'View details',
+    'common.updatedLabel': 'Last updated',
     'hero.eyebrow': 'AI-powered Korean destiny report',
     'hero.title1': 'Discover',
     'hero.title2': 'Korean Fortune Personality Test',
@@ -346,6 +367,25 @@ export const translations = {
     'hero.proof1': 'Clear input and reading criteria',
     'hero.proof2': 'Readable result structure',
     'hero.proof3': 'Policy and contact information available',
+    'geo.kicker': 'Quick Answers',
+    'geo.title': 'Core answers for AI search and visitors',
+    'geo.desc':
+      'This section explains the service purpose, intended audience, and data usage in short, direct language that is easy for both visitors and AI systems to summarize.',
+    'geo.q1': 'What kind of site is K-Destiny?',
+    'geo.a1':
+      'K-Destiny is a guided website that presents a Korean-style fortune personality test and destiny type reading based on your name and birth details.',
+    'geo.q2': 'Who is this site for?',
+    'geo.a2':
+      'It is intended for general visitors who want a light, readable interpretation of their tendencies, relationship flow, and life rhythm.',
+    'geo.q3': 'How is personal information used?',
+    'geo.a3':
+      'Entered information is used only for result generation and anonymous operational analytics. No extra sensitive identity data or payment information is requested.',
+    'geo.q4': 'How should the results be used?',
+    'geo.a4':
+      'The results should be treated as reference-oriented interpretation content, not as a substitute for medical, legal, or investment decisions.',
+    'geo.freshnessTitle': 'Content freshness notice',
+    'geo.freshnessDesc':
+      'Last updated: March 10, 2026. Page explanations, policies, inquiry guidance, and FAQs are revised whenever the operating standards actually change.',
     'sample.label': 'Sample free result',
     'sample.pill': 'FREE DESTINY TYPE',
     'sample.title': 'The Strategist',

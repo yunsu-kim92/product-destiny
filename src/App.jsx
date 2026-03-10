@@ -4,6 +4,7 @@ import HeroSection from './components/HeroSection.jsx';
 import DestinyForm from './components/DestinyForm.jsx';
 import ServiceFlowCard from './components/ServiceFlowCard.jsx';
 import ResultSection from './components/ResultSection.jsx';
+import QuickAnswersSection from './components/QuickAnswersSection.jsx';
 import Footer from './components/Footer.jsx';
 import { DEFAULT_LANGUAGE, LANGUAGES, translate } from './i18n/translations.js';
 import { buildPageUrl } from './seo.js';
@@ -80,6 +81,8 @@ function HomePage({
             onPrimaryCta={() => scrollToRef(formSectionRef)}
             onSecondaryCta={() => scrollToRef(guideSectionRef)}
           />
+
+          <QuickAnswersSection t={t} />
 
           <section className="section" id="start" ref={formSectionRef}>
             <div className="section-head">
@@ -202,18 +205,82 @@ function App() {
 
     const structuredData = document.getElementById('structured-data');
     if (structuredData) {
-      structuredData.textContent = JSON.stringify(
+      const homepageFaq = [
         {
-          '@context': 'https://schema.org',
-          '@type': pathname === '/' ? 'WebSite' : 'WebPage',
-          name: routeMeta.title,
-          url: pageUrl,
-          inLanguage: language,
-          description: routeMeta.description,
+          '@type': 'Question',
+          name: t('geo.q1'),
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: t('geo.a1'),
+          },
         },
-        null,
-        2,
-      );
+        {
+          '@type': 'Question',
+          name: t('geo.q2'),
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: t('geo.a2'),
+          },
+        },
+        {
+          '@type': 'Question',
+          name: t('geo.q3'),
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: t('geo.a3'),
+          },
+        },
+        {
+          '@type': 'Question',
+          name: t('geo.q4'),
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: t('geo.a4'),
+          },
+        },
+      ];
+
+      const graph =
+        pathname === '/'
+          ? [
+              {
+                '@context': 'https://schema.org',
+                '@type': 'WebSite',
+                name: 'K-Destiny',
+                url: pageUrl,
+                inLanguage: language,
+                description: routeMeta.description,
+              },
+              {
+                '@context': 'https://schema.org',
+                '@type': 'Organization',
+                name: 'K-Destiny',
+                url: pageUrl,
+                description: t('about.desc'),
+                contactPoint: {
+                  '@type': 'ContactPoint',
+                  contactType: 'customer support',
+                  url: buildPageUrl('/contact'),
+                },
+              },
+              {
+                '@context': 'https://schema.org',
+                '@type': 'FAQPage',
+                mainEntity: homepageFaq,
+              },
+            ]
+          : [
+              {
+                '@context': 'https://schema.org',
+                '@type': 'WebPage',
+                name: routeMeta.title,
+                url: pageUrl,
+                inLanguage: language,
+                description: routeMeta.description,
+              },
+            ];
+
+      structuredData.textContent = JSON.stringify(graph, null, 2);
     }
 
     window.localStorage.setItem('kdestiny-language', language);

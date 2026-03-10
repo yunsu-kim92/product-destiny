@@ -1,3 +1,21 @@
+# K-Destiny
+
+## Preview Environment
+
+Local Cloudflare Pages preview:
+
+1. Copy `.dev.vars.example` to `.dev.vars`
+2. Fill in `OPENAI_API_KEY` and prompt values if you want the Functions API to use OpenAI during preview
+3. Run:
+
+```bash
+npm run preview:pages
+```
+
+This preview serves the production build through `wrangler pages dev`, so it is the closest local match to the deployed Pages environment.
+
+SPA subpages such as `/about`, `/privacy`, `/terms`, `/refund`, and `/contact` are routed through `public/_redirects`.
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

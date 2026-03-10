@@ -8,6 +8,7 @@
     "build": "vite build",
     "pages:dev": "npx wrangler pages dev dist --compatibility-date=2026-03-09",
     "pages:preview": "npm run build && npm run pages:dev",
+    "preview:pages": "npm run pages:preview",
     "lint": "eslint .",
     "preview": "vite preview"
   },
