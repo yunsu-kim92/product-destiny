@@ -222,6 +222,8 @@ export const translations = {
       '서비스 의견, 이용 후기, 협업 아이디어를 자유롭게 남길 수 있는 공개 댓글 영역입니다.',
     'comments.noscript.prefix': '댓글을 보려면 JavaScript를 활성화하세요.',
     'comments.noscript.link': 'Disqus 댓글 보기',
+    cachedResultNotice:
+      '같은 입력 정보에 대한 이전 결과를 다시 보여주고 있습니다. 결과 일관성을 위해 동일 브라우저에서는 캐시된 분석을 우선 사용합니다.',
     'footer.left':
       '© 2026 K-Destiny. 한국형 성향 해석을 읽기 쉬운 설명형 콘텐츠로 정리합니다.',
     'footer.right': '문의, 정책, 피드백 경로를 공개하는 안내형 서비스 페이지입니다.',
@@ -339,6 +341,8 @@ export const translations = {
     validationBirthdate: '생년월일을 입력해 주세요.',
     validationConsent: '개인정보 및 안내 사항 동의가 필요합니다.',
     fallbackNotice: '로컬 프리뷰 환경이라 샘플 분석 결과를 표시했습니다.',
+    cachedResultNotice:
+      '같은 입력 정보에 대한 이전 결과를 다시 보여주고 있습니다. 결과 일관성을 위해 동일 브라우저에서는 캐시된 분석을 우선 사용합니다.',
     networkError:
       '실제 분석 서버를 사용할 수 없습니다. 운영 환경 변수와 OpenAI API 설정을 확인한 뒤 다시 시도해 주세요.',
   },
@@ -679,6 +683,8 @@ export const translations = {
     validationBirthdate: 'Please enter your birth date.',
     validationConsent: 'You must agree to the privacy notice to continue.',
     fallbackNotice: 'A mock result was shown because this is a local preview environment.',
+    cachedResultNotice:
+      'A previous result for the same input is being shown again. To keep the free analysis consistent, this browser reuses the cached result first.',
     networkError:
       'The live analysis service is unavailable. Check the production environment variables and OpenAI API configuration, then try again.',
   },

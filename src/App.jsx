@@ -8,6 +8,7 @@ import QuickAnswersSection from './components/QuickAnswersSection.jsx';
 import Footer from './components/Footer.jsx';
 import { DEFAULT_LANGUAGE, LANGUAGES, translate } from './i18n/translations.js';
 import { buildPageUrl } from './seo.js';
+import { getCachedAnalysis, setCachedAnalysis } from './utils/analysisCache.js';
 import { mockAnalyze } from './utils/mockAnalyze.js';
 import { validateForm } from './utils/validateForm.js';
 
@@ -385,6 +386,14 @@ function App() {
       return;
     }
 
+    const cachedResult = getCachedAnalysis(payload);
+    if (cachedResult) {
+      setSubmittedName(payload.name || 'Guest');
+      setResult(cachedResult);
+      setNotice(t('cachedResultNotice'));
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -417,6 +426,7 @@ function App() {
 
       setSubmittedName(payload.name || 'Guest');
       setResult(nextResult);
+      setCachedAnalysis(payload, nextResult);
     } catch (submissionError) {
       setError(getSubmissionErrorMessage(submissionError, t));
     } finally {
