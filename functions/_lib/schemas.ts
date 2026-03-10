@@ -9,6 +9,7 @@ export type FreeAnalysisData = {
   metrics: [Metric, Metric, Metric];
   preview: string;
   fullReportLocked: true;
+  imageDataUrl?: string;
 };
 
 export type FullReport = {

@@ -1,3 +1,4 @@
+import type { FreeAnalysisData } from './schemas';
 import type { AnalysisRequest } from './validators';
 
 const languageGuide: Record<AnalysisRequest['language'], string> = {
@@ -46,5 +47,64 @@ export function buildUserPrompt(payload: AnalysisRequest) {
     `Birthtime: ${payload.birthtime || ''}`,
     `Gender: ${payload.gender || ''}`,
     `Language: ${payload.language}`,
+  ].join('\n');
+}
+
+export function buildImagePrompt(analysis: FreeAnalysisData) {
+  return [
+    'You are the image prompt generator for K-Destiny, a Korean-style personality and destiny reading service.',
+    '',
+    'Your job:',
+    'Convert the destiny analysis result into a high-quality image generation prompt.',
+    '',
+    'Task:',
+    'Generate a visual illustration prompt that represents the destiny archetype.',
+    '',
+    'Rules:',
+    '- Do NOT output JSON.',
+    '- Output only a single image generation prompt.',
+    '- Do NOT include text to be drawn inside the image.',
+    '- Do NOT include logos, typography, UI, or watermarks.',
+    '- Focus on symbolic and emotional visual storytelling.',
+    '',
+    'Interpretation:',
+    'Use the following fields to shape the visual concept:',
+    'typeName -> defines the main archetype theme',
+    'summary -> defines the emotional tone',
+    'preview -> provides symbolic hints for strengths, patterns, and caution',
+    '',
+    'Style requirements:',
+    'The image must follow a consistent premium style suitable for a mobile destiny reading app.',
+    '',
+    'Style:',
+    'modern Korean mystical aesthetic, premium editorial illustration, elegant composition, soft cinematic lighting, subtle spiritual symbolism, refined digital painting, minimal background, emotionally warm atmosphere',
+    '',
+    'Visual direction:',
+    '- one clear central symbolic scene',
+    '- calm and elegant composition',
+    '- subtle mystical atmosphere',
+    '- symbolic elements representing personality traits',
+    '- harmonious color palette',
+    '- premium mobile-app illustration style',
+    '',
+    'Avoid:',
+    '- cartoon style',
+    '- exaggerated fantasy armor',
+    '- horror elements',
+    '- cluttered scenes',
+    '- tarot card cliches',
+    '',
+    'Analysis input:',
+    JSON.stringify(
+      {
+        typeName: analysis.typeName,
+        summary: analysis.summary,
+        metrics: analysis.metrics,
+        preview: analysis.preview,
+        fullReportLocked: analysis.fullReportLocked,
+      },
+      null,
+      2,
+    ),
   ].join('\n');
 }

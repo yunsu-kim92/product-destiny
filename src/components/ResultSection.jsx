@@ -28,6 +28,15 @@ function ResultSection({
               <span>{t('resultMeta', { name: submittedName })}</span>
             </div>
 
+            {result.imageDataUrl ? (
+              <img
+                className="result-artwork"
+                src={result.imageDataUrl}
+                alt={result.typeName}
+                loading="eager"
+              />
+            ) : null}
+
             <h3 className="result-type">{result.typeName}</h3>
             <p className="result-summary">{result.summary}</p>
 

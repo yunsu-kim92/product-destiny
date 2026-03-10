@@ -63,6 +63,21 @@ const presets = {
 
 export function mockAnalyze(payload) {
   const locale = presets[payload.language] || presets.ko;
+  const svg = encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
+      <defs>
+        <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#101828"/>
+          <stop offset="50%" stop-color="#8f67ff"/>
+          <stop offset="100%" stop-color="#ec4899"/>
+        </linearGradient>
+      </defs>
+      <rect width="1024" height="1024" fill="url(#bg)"/>
+      <circle cx="512" cy="360" r="220" fill="rgba(255,255,255,0.10)"/>
+      <circle cx="512" cy="360" r="126" fill="rgba(241,182,92,0.26)"/>
+      <path d="M512 182 L558 322 L706 322 L586 408 L630 552 L512 468 L394 552 L438 408 L318 322 L466 322 Z" fill="rgba(255,255,255,0.82)"/>
+    </svg>
+  `);
 
   return Promise.resolve({
     typeName: locale.typeName,
@@ -70,5 +85,6 @@ export function mockAnalyze(payload) {
     metrics: locale.metrics,
     preview: locale.preview,
     fullReportLocked: locale.fullReportLocked,
+    imageDataUrl: `data:image/svg+xml;charset=utf-8,${svg}`,
   });
 }

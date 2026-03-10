@@ -1,4 +1,5 @@
-import { buildUserPrompt } from './prompts';
+import { buildImagePrompt, buildUserPrompt } from './prompts';
+import type { FreeAnalysisData } from './schemas';
 import type { AnalysisRequest, Env } from './validators';
 
 export const OPENAI_MODEL = 'gpt-5-mini';
@@ -21,6 +22,15 @@ type OpenAIResponseShape = {
       text?: string;
       refusal?: string;
     }>;
+  }>;
+  error?: {
+    message?: string;
+  };
+};
+
+type OpenAIImageResponseShape = {
+  data?: Array<{
+    b64_json?: string;
   }>;
   error?: {
     message?: string;
@@ -142,4 +152,44 @@ export async function requestStructuredOutput<T>(options: {
   } catch {
     throw new Error('OPENAI_INVALID_RESPONSE');
   }
+}
+
+export async function requestGeneratedImage(options: {
+  env: Env;
+  analysis: FreeAnalysisData;
+}) {
+  const apiKey = options.env.OPENAI_API_KEY;
+
+  if (!apiKey) {
+    throw new Error('MISSING_API_KEY');
+  }
+
+  const response = await fetch('https://api.openai.com/v1/images/generations', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model: 'gpt-image-1.5',
+      prompt: buildImagePrompt(options.analysis),
+      n: 1,
+      size: '1024x1024',
+      quality: 'auto',
+    }),
+  });
+
+  const json = (await response.json()) as OpenAIImageResponseShape;
+
+  if (!response.ok) {
+    throw new Error(json.error?.message || 'OPENAI_IMAGE_REQUEST_FAILED');
+  }
+
+  const b64 = json.data?.[0]?.b64_json;
+
+  if (!b64) {
+    throw new Error('OPENAI_IMAGE_INVALID_RESPONSE');
+  }
+
+  return `data:image/png;base64,${b64}`;
 }

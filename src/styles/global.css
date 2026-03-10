@@ -697,6 +697,20 @@ h1 {
   font-size: 18px;
 }
 
+.result-artwork {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  margin: 18px 0 22px;
+  border-radius: 28px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 24px 54px rgba(0, 0, 0, 0.28);
+}
+
 .result-preview {
   position: relative;
   z-index: 1;

@@ -1,6 +1,6 @@
 import { buildFreeSystemPrompt } from '../_lib/prompts';
 import { errorResponse, jsonResponse, parseJsonBody } from '../_lib/json';
-import { requestStructuredOutput } from '../_lib/openai';
+import { requestGeneratedImage, requestStructuredOutput } from '../_lib/openai';
 import { freeAnalysisSchema, type FreeAnalysisData } from '../_lib/schemas';
 import { validateAnalysisInput, type Env } from '../_lib/validators';
 
@@ -29,6 +29,15 @@ export async function onRequestPost(context: Context) {
       systemPrompt: buildFreeSystemPrompt(validation.data.language),
       payload: validation.data,
     });
+
+    try {
+      data.imageDataUrl = await requestGeneratedImage({
+        env: context.env,
+        analysis: data,
+      });
+    } catch {
+      // Keep the analysis response usable even if image generation fails.
+    }
 
     return jsonResponse({
       ok: true,
