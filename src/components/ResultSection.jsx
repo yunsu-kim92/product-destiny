@@ -1,4 +1,3 @@
-import AdSlot from './AdSlot.jsx';
 import LockedReport from './LockedReport.jsx';
 
 function ResultSection({
@@ -66,8 +65,6 @@ function ResultSection({
           lockedRef={lockedRef}
           isLocked={result?.fullReportLocked !== false}
         />
-
-        <AdSlot label="AdSense Slot" description={t('ads.bottom')} />
       </div>
     </section>
   );

@@ -4,7 +4,6 @@ import HeroSection from './components/HeroSection.jsx';
 import DestinyForm from './components/DestinyForm.jsx';
 import ServiceFlowCard from './components/ServiceFlowCard.jsx';
 import ResultSection from './components/ResultSection.jsx';
-import AdSlot from './components/AdSlot.jsx';
 import PartnershipSection from './components/PartnershipSection.jsx';
 import CommentsSection from './components/CommentsSection.jsx';
 import PolicySection from './components/PolicySection.jsx';
@@ -149,10 +148,6 @@ function App() {
           onPrimaryCta={() => scrollToRef(formSectionRef)}
           onSecondaryCta={() => scrollToRef(resultsSectionRef)}
         />
-
-        <section className="section">
-          <AdSlot label="AdSense Slot" description={t('ads.top')} />
-        </section>
 
         <section className="section" id="start" ref={formSectionRef}>
           <div className="section-head">
