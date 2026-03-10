@@ -23,32 +23,39 @@ function EditorialSection({ t }) {
 
   return (
     <section className="section" id="guide">
-      <div className="section-head">
-        <span className="section-kicker">{t('editorial.kicker')}</span>
-        <h2 className="section-title">{t('editorial.title')}</h2>
-        <p className="section-subtitle">{t('editorial.desc')}</p>
-      </div>
+      <details className="collapsible-section">
+        <summary className="collapsible-summary">
+          <div className="section-head collapsible-head">
+            <span className="section-kicker">{t('editorial.kicker')}</span>
+            <h2 className="section-title">{t('editorial.title')}</h2>
+            <p className="section-subtitle">{t('editorial.desc')}</p>
+          </div>
+          <span className="collapsible-trigger">{t('common.expand')}</span>
+        </summary>
 
-      <div className="policy-links editorial-grid">
-        {principles.map((item) => (
-          <article className="policy-link" key={item.title}>
-            <strong>{item.title}</strong>
-            <span>{item.description}</span>
-          </article>
-        ))}
-      </div>
+        <div className="collapsible-body">
+          <div className="policy-links editorial-grid">
+            {principles.map((item) => (
+              <article className="policy-link" key={item.title}>
+                <strong>{item.title}</strong>
+                <span>{item.description}</span>
+              </article>
+            ))}
+          </div>
 
-      <div className="panel editorial-panel">
-        <h3>{t('editorial.checkTitle')}</h3>
-        <div className="editorial-checklist">
-          {checklist.map((item) => (
-            <div className="editorial-check" key={item}>
-              <strong>{t('editorial.checkBadge')}</strong>
-              <span>{item}</span>
+          <div className="panel editorial-panel">
+            <h3>{t('editorial.checkTitle')}</h3>
+            <div className="editorial-checklist">
+              {checklist.map((item) => (
+                <div className="editorial-check" key={item}>
+                  <strong>{t('editorial.checkBadge')}</strong>
+                  <span>{item}</span>
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
         </div>
-      </div>
+      </details>
     </section>
   );
 }
