@@ -1,9 +1,29 @@
 function PolicySection({ t }) {
   const policies = [
-    { title: t('policy.privacyTitle'), description: t('policy.privacyDesc') },
-    { title: t('policy.termsTitle'), description: t('policy.termsDesc') },
-    { title: t('policy.refundTitle'), description: t('policy.refundDesc') },
-    { title: t('policy.contactTitle'), description: t('policy.contactDesc') },
+    {
+      title: t('policy.privacyTitle'),
+      description: t('policy.privacyDesc'),
+      detail: t('policy.privacyDetail'),
+      href: '/privacy',
+    },
+    {
+      title: t('policy.termsTitle'),
+      description: t('policy.termsDesc'),
+      detail: t('policy.termsDetail'),
+      href: '/terms',
+    },
+    {
+      title: t('policy.refundTitle'),
+      description: t('policy.refundDesc'),
+      detail: t('policy.refundDetail'),
+      href: '/refund',
+    },
+    {
+      title: t('policy.contactTitle'),
+      description: t('policy.contactDesc'),
+      detail: t('policy.contactDetail'),
+      href: '/contact',
+    },
   ];
 
   return (
@@ -16,9 +36,10 @@ function PolicySection({ t }) {
 
       <div className="policy-links">
         {policies.map((policy) => (
-          <a className="policy-link" href="#" key={policy.title}>
+          <a className="policy-link" href={policy.href} key={policy.title}>
             <strong>{policy.title}</strong>
             <span>{policy.description}</span>
+            <p>{policy.detail}</p>
           </a>
         ))}
       </div>

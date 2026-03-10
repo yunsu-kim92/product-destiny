@@ -14,8 +14,11 @@ export const translations = {
     pageDescription:
       'AI로 당신의 한국형 운명 타입을 발견해보세요. 한국 전통의 통찰을 현대적인 성향 분석 경험으로 재해석했습니다.',
     'nav.analyze': '분석',
+    'nav.guide': '운영 기준',
     'nav.results': '결과',
+    'nav.about': '소개',
     'nav.partnership': '제휴문의',
+    'nav.faq': 'FAQ',
     'nav.comments': '댓글',
     'nav.policy': '정책',
     'nav.languageLabel': '언어 선택',
@@ -24,12 +27,12 @@ export const translations = {
     'hero.title2': '한국형 운명 타입',
     'hero.title3': '을 지금 확인하세요',
     'hero.desc':
-      'K-Destiny는 한국 전통의 통찰을 현대적인 분석 경험으로 재구성합니다. 이름과 생년 정보를 입력하면 무료 운명 타입 결과를 먼저 보여주고, 더 깊은 전체 리포트는 잠금 해제 구조로 연결합니다.',
-    'hero.cta1': '내 운명 타입 확인하기',
-    'hero.cta2': '결과 미리보기',
-    'hero.proof1': '60초 내 무료 결과',
-    'hero.proof2': '입력 후 바로 분석 흐름',
-    'hero.proof3': '프리미엄 리포트 전환 구조',
+      'K-Destiny는 한국 문화권에서 익숙한 성향 해석 문법을 현대적인 읽기 경험으로 정리한 안내형 서비스입니다. 입력 정보를 바탕으로 핵심 성향, 관계 흐름, 일과 돈의 리듬을 한눈에 읽기 쉽게 제공합니다.',
+    'hero.cta1': '내 성향 읽어보기',
+    'hero.cta2': '서비스 기준 보기',
+    'hero.proof1': '입력 항목과 해석 기준 공개',
+    'hero.proof2': '읽기 쉬운 결과 구조',
+    'hero.proof3': '문의 및 정책 정보 제공',
     'sample.label': '샘플 무료 결과',
     'sample.pill': 'FREE DESTINY TYPE',
     'sample.title': '전략가형',
@@ -46,7 +49,7 @@ export const translations = {
     'form.kicker': 'Step 1. 입력',
     'form.title': '내 운명 타입 분석 시작',
     'form.desc':
-      '실제 서비스용 입력 구조로 설계했습니다. 필수 정보만 받아 무료 결과를 먼저 보여주고, 전체 해석은 잠금된 리포트로 이어집니다.',
+      '이름과 생년월일을 바탕으로 기본 성향을 읽어보는 입력 폼입니다. 해석 언어와 기본 정보만 입력하면 핵심 요약과 대표 지표를 먼저 확인할 수 있습니다.',
     'form.name': '이름',
     'form.namePlaceholder': '이름을 입력하세요',
     'form.birthdate': '생년월일',
@@ -64,7 +67,26 @@ export const translations = {
     'form.submit': '내 운명 타입 확인하기',
     'form.secondaryCta': '결과 흐름 보기',
     'form.note':
-      '백엔드 연결 전까지는 실제 `/api/analyze` 호출을 우선 시도하고, 실패 시 즉시 mock 결과로 사용자 흐름을 유지합니다.',
+      '입력 정보는 결과 생성과 운영 개선을 위한 익명 통계 확인에만 사용됩니다.',
+    'editorial.kicker': 'Guide',
+    'editorial.title': '이 사이트가 정보를 구성하는 방식',
+    'editorial.desc':
+      '단순한 흥미 위주의 문구 대신, 사용자가 실제로 이해할 수 있는 설명형 콘텐츠를 제공하는 것을 운영 기준으로 삼습니다.',
+    'editorial.card1Title': '독창적 설명 콘텐츠',
+    'editorial.card1Desc':
+      '결과 문구는 한국형 성향 해석 문법을 바탕으로 다시 작성하며, 한 페이지 안에서 맥락과 요약을 함께 제공합니다.',
+    'editorial.card2Title': '쉽게 탐색되는 구조',
+    'editorial.card2Desc':
+      '입력, 해석 기준, 결과, FAQ, 문의, 정책 순서로 이동할 수 있게 구성해 필요한 정보를 빠르게 찾을 수 있습니다.',
+    'editorial.card3Title': '운영 정보 공개',
+    'editorial.card3Desc':
+      '개인정보 처리, 문의 경로, 광고 운영 원칙, 제공 범위를 페이지 안에서 직접 확인할 수 있게 정리합니다.',
+    'editorial.checkTitle': '운영 체크리스트',
+    'editorial.checkBadge': 'Check',
+    'editorial.point1': '입력 전에 서비스 목적과 해석 범위를 먼저 설명합니다.',
+    'editorial.point2': '광고보다 본문 정보와 결과 설명이 먼저 보이도록 유지합니다.',
+    'editorial.point3': '정책, 문의, 의견 수렴 경로를 하단에 따로 제공합니다.',
+    'editorial.point4': '중복 페이지 없이 한 사이트 안에서 주요 정보를 통합합니다.',
     'flow.kicker': 'Service Flow',
     'flow.step1Title': '입력 정보 수집',
     'flow.step1Desc':
@@ -108,19 +130,43 @@ export const translations = {
     'locked.overlayDesc':
       '현재는 미리보기만 표시됩니다. 결제 연동 후 이 영역의 잠금 상태를 해제하면 됩니다.',
     'locked.cta': '전체 결과 보기',
-    'locked.note': '현재는 결제 연동 전 프로토타입 상태입니다.',
+    'locked.note': '심화 해석은 운영 정책과 제공 방식이 정리된 뒤 별도 안내됩니다.',
+    'faq.kicker': 'FAQ',
+    'faq.title': '서비스 이용 전 자주 묻는 질문',
+    'faq.desc':
+      '입력 정보 사용 범위, 결과 해석 방식, 문의 처리 방법처럼 방문자가 자주 확인하는 내용을 먼저 정리했습니다.',
+    'faq.q1': '이 서비스는 무엇을 제공하나요?',
+    'faq.a1':
+      '이 사이트는 이름과 생년 정보를 바탕으로 성향과 흐름을 읽어보는 안내형 결과 페이지를 제공합니다. 의료, 법률, 투자 조언이 아닌 참고용 해석 콘텐츠입니다.',
+    'faq.q2': '입력한 정보는 어디에 사용되나요?',
+    'faq.a2':
+      '입력한 정보는 결과 생성과 서비스 개선을 위한 익명 통계 확인에만 사용합니다. 민감한 추가 정보는 요구하지 않습니다.',
+    'faq.q3': '결과는 어떻게 읽으면 좋나요?',
+    'faq.a3':
+      '핵심 타입은 요약으로 보고, 지표와 미리보기 문단은 생활 패턴을 점검하는 참고 자료로 활용하는 것이 적절합니다.',
+    'faq.q4': '문의나 제휴 제안은 어디로 보내나요?',
+    'faq.a4':
+      '페이지 하단의 제휴 및 문의 폼을 통해 접수할 수 있으며, 공개 의견은 댓글 섹션에서도 남길 수 있습니다.',
     'policy.kicker': 'Policy',
-    'policy.title': '서비스 운영에 필요한 정책 링크',
+    'policy.title': '서비스 운영 정책과 안내',
     'policy.desc':
-      '실제 서비스 이관 시 아래 링크만 각각의 정책 문서 URL로 연결하면 됩니다.',
+      '신뢰할 수 있는 이용 경험을 위해 수집 정보, 제공 범위, 문의 처리 원칙을 한 페이지 안에서 확인할 수 있게 정리했습니다.',
     'policy.privacyTitle': '개인정보처리방침',
     'policy.privacyDesc': '수집 항목, 보관 기간, 활용 범위를 안내합니다.',
+    'policy.privacyDetail':
+      '이름, 생년월일, 선택 입력 정보는 결과 생성과 운영 품질 점검을 위해서만 사용하며, 민감한 추가 신원정보를 요구하지 않습니다.',
     'policy.termsTitle': '이용약관',
     'policy.termsDesc': '서비스 이용 조건과 책임 범위를 정의합니다.',
+    'policy.termsDetail':
+      '본 서비스의 결과는 참고용 해석 콘텐츠이며, 의료·법률·재무 결정을 대신하지 않습니다. 이용자는 결과를 개인적 참고 범위에서 사용해야 합니다.',
     'policy.refundTitle': '환불정책',
     'policy.refundDesc': '디지털 리포트 상품의 환불 기준을 고지합니다.',
+    'policy.refundDetail':
+      '유료 기능이 도입되는 경우 결제 전 상품 범위와 제공 시점을 명확히 안내하며, 실제 결제 전까지는 구매를 유도하는 숨은 과금 흐름을 두지 않습니다.',
     'policy.contactTitle': '문의하기',
     'policy.contactDesc': 'CS 및 제휴 문의 채널을 연결합니다.',
+    'policy.contactDetail':
+      '일반 문의와 제휴 문의는 아래 폼으로 접수할 수 있으며, 공개 피드백은 댓글 섹션에서 확인하고 운영 반영 여부를 검토합니다.',
     'partnership.kicker': 'Partnership',
     'partnership.title': '브랜드 및 제휴 문의',
     'partnership.desc':
@@ -159,11 +205,117 @@ export const translations = {
     'comments.noscript.prefix': '댓글을 보려면 JavaScript를 활성화하세요.',
     'comments.noscript.link': 'Disqus 댓글 보기',
     'footer.left':
-      '© 2026 K-Destiny. 한국적 통찰을 현대적인 프리미엄 리포트 경험으로 재해석했습니다.',
-    'footer.right': 'Static prototype for Cloudflare Pages + GitHub auto deploy.',
+      '© 2026 K-Destiny. 한국형 성향 해석을 읽기 쉬운 설명형 콘텐츠로 정리합니다.',
+    'footer.right': '문의, 정책, 피드백 경로를 공개하는 안내형 서비스 페이지입니다.',
+    'footer.about': '서비스 소개',
+    'about.metaTitle': 'K-Destiny | 서비스 소개',
+    'about.metaDescription':
+      'K-Destiny가 어떤 해석 기준과 운영 원칙으로 콘텐츠를 제공하는지 설명합니다.',
+    'about.title': 'K-Destiny 소개',
+    'about.desc':
+      'K-Destiny는 한국형 성향 해석 문법을 읽기 쉬운 웹 콘텐츠로 정리하는 안내형 서비스입니다.',
+    'about.cta': '홈에서 결과 보기',
+    'about.section1Title': '서비스 목적',
+    'about.section1Body1':
+      '이 사이트는 한국 문화권에서 친숙한 성향 읽기 방식을 웹에서 쉽게 이해할 수 있도록 정리하는 것을 목표로 합니다.',
+    'about.section1Body2':
+      '짧은 입력만으로 핵심 요약을 확인하고, 결과 문장을 통해 자기 성향을 점검해볼 수 있게 구성했습니다.',
+    'about.section2Title': '콘텐츠 기준',
+    'about.section2Body1':
+      '결과 문구는 단순 자극형 문장이 아니라 맥락과 활용 방향을 함께 설명하는 형태로 작성합니다.',
+    'about.section2Body2':
+      '광고, 제휴, 문의 정보보다 실제 해석 콘텐츠가 먼저 보이도록 페이지 구조를 유지합니다.',
+    'about.section3Title': '운영 원칙',
+    'about.section3Body1':
+      '수집 정보와 서비스 범위를 공개하고, 별도 정책 페이지에서 개인정보 처리와 이용 조건을 확인할 수 있게 제공합니다.',
+    'about.section3Body2':
+      '방문자 의견은 공개 댓글과 문의 폼을 통해 받고, 운영 품질 개선에 반영할 수 있도록 검토합니다.',
+    'privacy.metaTitle': 'K-Destiny | 개인정보처리방침',
+    'privacy.metaDescription':
+      'K-Destiny의 수집 정보, 이용 목적, 보관 범위에 대한 안내입니다.',
+    'privacy.title': '개인정보처리방침',
+    'privacy.desc':
+      '서비스 이용 과정에서 어떤 정보를 왜 수집하는지, 얼마나 제한적으로 사용하는지 설명합니다.',
+    'privacy.cta': '문의 페이지 보기',
+    'privacy.section1Title': '수집 항목',
+    'privacy.section1Body1':
+      '기본 입력 항목은 이름, 생년월일, 태어난 시간, 성별, 언어 선택 정보이며 일부 항목은 선택 입력입니다.',
+    'privacy.section1Body2':
+      '문의 폼에서는 회사명, 담당자명, 이메일, 연락처, 문의 내용을 수집할 수 있습니다.',
+    'privacy.section2Title': '이용 목적',
+    'privacy.section2Body1':
+      '수집 정보는 결과 생성, 문의 응답, 서비스 운영 품질 점검을 위한 익명 통계 확인에 한해 사용합니다.',
+    'privacy.section2Body2':
+      '민감한 추가 신원정보나 결제정보를 요구하지 않으며, 목적 외 활용을 하지 않습니다.',
+    'privacy.section3Title': '보관과 관리',
+    'privacy.section3Body1':
+      '운영상 필요한 최소 범위에서만 정보를 다루며, 불필요한 장기 보관을 지양합니다.',
+    'privacy.section3Body2':
+      '정책이 변경되는 경우 페이지 내 고지 내용을 함께 업데이트해 방문자가 쉽게 확인할 수 있게 합니다.',
+    'terms.metaTitle': 'K-Destiny | 이용약관',
+    'terms.metaDescription': 'K-Destiny 서비스 이용 범위와 책임 한계를 안내합니다.',
+    'terms.title': '이용약관',
+    'terms.desc':
+      '결과 콘텐츠의 성격과 이용자가 참고해야 할 사용 범위, 운영자의 책임 한계를 정리합니다.',
+    'terms.section1Title': '서비스 성격',
+    'terms.section1Body1':
+      'K-Destiny의 결과는 참고용 해석 콘텐츠이며, 의료, 법률, 세무, 투자 자문을 대체하지 않습니다.',
+    'terms.section1Body2':
+      '이용자는 결과를 개인적 참고 자료로 활용해야 하며, 중요한 판단은 별도의 전문 검토를 병행해야 합니다.',
+    'terms.section2Title': '이용자 책임',
+    'terms.section2Body1':
+      '이용자는 본인이 입력한 정보의 정확성을 스스로 확인해야 하며, 타인의 정보를 무단 입력해서는 안 됩니다.',
+    'terms.section2Body2':
+      '댓글과 문의 등 공개 또는 전달 콘텐츠에는 타인의 권리와 관련 법령을 침해하는 내용을 포함해서는 안 됩니다.',
+    'terms.section3Title': '운영자 책임 한계',
+    'terms.section3Body1':
+      '운영자는 서비스 안정성과 정보 품질을 개선하기 위해 노력하지만, 외부 네트워크 장애나 제3자 서비스 이슈까지 보장할 수는 없습니다.',
+    'terms.section3Body2':
+      '필요한 경우 서비스 구조와 기능, 정책 고지 내용을 조정할 수 있으며 변경 시 페이지에 반영합니다.',
+    'refund.metaTitle': 'K-Destiny | 환불정책',
+    'refund.metaDescription': '유료 기능 도입 시 적용될 환불 기준과 안내 원칙입니다.',
+    'refund.title': '환불정책',
+    'refund.desc':
+      '현재 공개 기능은 무료 안내 중심이며, 향후 유료 기능이 도입될 경우 어떤 기준으로 환불 안내를 할지 미리 설명합니다.',
+    'refund.section1Title': '현재 제공 상태',
+    'refund.section1Body1':
+      '현재 메인 페이지에서 공개되는 기본 결과와 정보성 콘텐츠는 무료로 제공됩니다.',
+    'refund.section1Body2':
+      '별도 결제 기능이 도입되기 전까지는 즉시 결제를 유도하는 숨은 과금 흐름을 두지 않습니다.',
+    'refund.section2Title': '유료 기능 도입 시 원칙',
+    'refund.section2Body1':
+      '유료 리포트나 추가 기능이 제공될 경우, 결제 전 상품 범위와 제공 시점, 환불 가능 조건을 명확히 안내합니다.',
+    'refund.section2Body2':
+      '디지털 콘텐츠 특성을 고려해 이미 제공이 완료된 부분과 미제공 부분을 구분해 안내합니다.',
+    'refund.section3Title': '문의 절차',
+    'refund.section3Body1':
+      '결제 관련 문의는 별도 연락 페이지 또는 공식 문의 채널을 통해 접수할 수 있게 안내합니다.',
+    'refund.section3Body2':
+      '실제 결제 기능이 적용되는 시점에는 결제수단, 처리 기간, 예외 사유까지 함께 고지합니다.',
+    'contact.metaTitle': 'K-Destiny | 문의 안내',
+    'contact.metaDescription': '일반 문의, 제휴 문의, 공개 피드백 채널 안내입니다.',
+    'contact.title': '문의 안내',
+    'contact.desc':
+      '사이트 운영, 제휴 제안, 공개 의견 남기기 등 상황별로 어떤 채널을 이용하면 되는지 정리했습니다.',
+    'contact.cta': '홈에서 문의 폼 열기',
+    'contact.section1Title': '일반 문의',
+    'contact.section1Body1':
+      '서비스 이용 중 불편 사항이나 수정 제안이 있다면 홈의 제휴 및 문의 폼을 통해 전달할 수 있습니다.',
+    'contact.section1Body2':
+      '문의 내용은 운영 목적에 따라 검토되며, 필요한 경우 답변 가능한 연락처로 회신합니다.',
+    'contact.section2Title': '제휴 및 비즈니스 제안',
+    'contact.section2Body1':
+      '브랜드 협업, 콘텐츠 제휴, 리퍼럴 제안은 제휴 문의 폼에서 회사명과 제안 목적을 함께 남기면 검토에 도움이 됩니다.',
+    'contact.section2Body2':
+      '광고 집행이나 공동 프로모션 문의는 희망 일정과 범위를 함께 기재하는 것이 좋습니다.',
+    'contact.section3Title': '공개 피드백',
+    'contact.section3Body1':
+      '일반 이용자 의견이나 후기, 공개 토론은 댓글 섹션에서 남길 수 있습니다.',
+    'contact.section3Body2':
+      '공개 영역에는 개인정보나 민감한 계약 정보 대신 서비스 개선 의견 중심으로 작성하는 것을 권장합니다.',
     loadingMessage: '운명 타입을 분석하고 있습니다...',
     unlockAlert:
-      '결제 연동 전 프로토타입입니다. 실제 서비스에서는 이 버튼을 결제 모달 또는 체크아웃으로 연결하세요.',
+      '심화 해석 제공 방식은 운영 정책 정리 후 별도 안내될 예정입니다. 현재는 공개된 기본 결과와 안내 섹션을 참고해 주세요.',
     resultMeta: '{name}님의 무료 결과',
     validationName: '이름을 입력해 주세요.',
     validationBirthdate: '생년월일을 입력해 주세요.',
