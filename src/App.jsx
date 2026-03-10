@@ -6,6 +6,7 @@ import ServiceFlowCard from './components/ServiceFlowCard.jsx';
 import ResultSection from './components/ResultSection.jsx';
 import AdSlot from './components/AdSlot.jsx';
 import PartnershipSection from './components/PartnershipSection.jsx';
+import CommentsSection from './components/CommentsSection.jsx';
 import PolicySection from './components/PolicySection.jsx';
 import Footer from './components/Footer.jsx';
 import { DEFAULT_LANGUAGE, translate } from './i18n/translations.js';
@@ -187,6 +188,7 @@ function App() {
         />
 
         <PartnershipSection t={t} />
+        <CommentsSection t={t} />
         <PolicySection t={t} />
         <Footer t={t} />
       </div>

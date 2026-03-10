@@ -808,6 +808,25 @@ h1 {
   gap: 14px;
 }
 
+.comments-panel {
+  padding: 28px;
+}
+
+#disqus_thread {
+  min-height: 240px;
+}
+
+.comments-panel noscript {
+  display: block;
+  margin-top: 16px;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.comments-panel a {
+  color: #ffe8b7;
+}
+
 .policy-link {
   padding: 20px;
   border-radius: 22px;
