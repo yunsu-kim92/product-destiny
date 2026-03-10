@@ -1,4 +1,6 @@
-function PolicySection({ t }) {
+import AppLink from './AppLink.jsx';
+
+function PolicySection({ t, onNavigate }) {
   const policies = [
     {
       title: t('policy.privacyTitle'),
@@ -36,11 +38,16 @@ function PolicySection({ t }) {
 
       <div className="policy-links">
         {policies.map((policy) => (
-          <a className="policy-link" href={policy.href} key={policy.title}>
+          <AppLink
+            className="policy-link"
+            href={policy.href}
+            key={policy.title}
+            onNavigate={onNavigate}
+          >
             <strong>{policy.title}</strong>
             <span>{policy.description}</span>
             <p>{policy.detail}</p>
-          </a>
+          </AppLink>
         ))}
       </div>
     </section>

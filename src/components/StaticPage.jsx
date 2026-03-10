@@ -1,4 +1,6 @@
-function StaticPage({ title, description, sections, cta }) {
+import AppLink from './AppLink.jsx';
+
+function StaticPage({ title, description, sections, cta, onNavigate }) {
   return (
     <section className="static-page">
       <div className="static-hero panel">
@@ -7,9 +9,9 @@ function StaticPage({ title, description, sections, cta }) {
         <p className="static-description">{description}</p>
         {cta ? (
           <div className="cta-row">
-            <a className="btn btn-primary" href={cta.href}>
+            <AppLink className="btn btn-primary" href={cta.href} onNavigate={onNavigate}>
               {cta.label}
-            </a>
+            </AppLink>
           </div>
         ) : null}
       </div>

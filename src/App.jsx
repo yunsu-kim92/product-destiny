@@ -45,18 +45,35 @@ function isLocalPreview() {
   return hostname === 'localhost' || hostname === '127.0.0.1';
 }
 
+function getSubmissionErrorMessage(error, t) {
+  if (error instanceof Error && error.message.trim()) {
+    return error.message;
+  }
+
+  return t('networkError');
+}
+
 function getCurrentPath() {
   if (typeof window === 'undefined') {
     return '/';
   }
 
-  return window.location.pathname || '/';
+  return normalizePath(window.location.pathname || '/');
+}
+
+function normalizePath(pathname) {
+  if (!pathname || pathname === '/') {
+    return '/';
+  }
+
+  return pathname.endsWith('/') ? pathname.slice(0, -1) : pathname;
 }
 
 function HomePage({
   t,
   language,
   setLanguage,
+  onNavigate,
   formSectionRef,
   guideSectionRef,
   resultsSectionRef,
@@ -83,7 +100,7 @@ function HomePage({
   return (
     <div className="page-shell">
       <div className="container">
-        <Navbar language={language} setLanguage={setLanguage} t={t} />
+        <Navbar language={language} setLanguage={setLanguage} t={t} onNavigate={onNavigate} />
         <main>
           <HeroSection
             t={t}
@@ -136,10 +153,10 @@ function HomePage({
             <PartnershipSection t={t} />
             <FaqSection t={t} />
             <CommentsSection t={t} />
-            <PolicySection t={t} />
+            <PolicySection t={t} onNavigate={onNavigate} />
           </Suspense>
         </main>
-        <Footer t={t} />
+        <Footer t={t} onNavigate={onNavigate} />
       </div>
     </div>
   );
@@ -327,6 +344,30 @@ function App() {
     }
   };
 
+  const handleNavigate = (nextHref) => {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const nextUrl = new URL(nextHref, window.location.origin);
+    const nextPath = `${normalizePath(nextUrl.pathname)}${nextUrl.search}`;
+
+    window.history.pushState({}, '', `${nextPath}${nextUrl.hash}`);
+    setPathname(normalizePath(nextUrl.pathname || '/'));
+
+    if (nextUrl.hash) {
+      requestAnimationFrame(() => {
+        document.querySelector(nextUrl.hash)?.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      });
+      return;
+    }
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     setHasSubmitted(true);
@@ -377,7 +418,7 @@ function App() {
       setSubmittedName(payload.name || 'Guest');
       setResult(nextResult);
     } catch (submissionError) {
-      setError(t('networkError'));
+      setError(getSubmissionErrorMessage(submissionError, t));
     } finally {
       setLoading(false);
     }
@@ -467,7 +508,13 @@ function App() {
     return (
       <div className="page-shell">
         <div className="container">
-          <Navbar language={language} setLanguage={setLanguage} t={t} isSubpage />
+          <Navbar
+            language={language}
+            setLanguage={setLanguage}
+            t={t}
+            isSubpage
+            onNavigate={handleNavigate}
+          />
           <main>
             <Suspense fallback={null}>
               <StaticPage
@@ -475,10 +522,11 @@ function App() {
                 description={activePage.description}
                 sections={activePage.sections}
                 cta={activePage.cta}
+                onNavigate={handleNavigate}
               />
             </Suspense>
           </main>
-          <Footer t={t} />
+          <Footer t={t} onNavigate={handleNavigate} />
         </div>
       </div>
     );
@@ -489,6 +537,7 @@ function App() {
       t={t}
       language={language}
       setLanguage={setLanguage}
+      onNavigate={handleNavigate}
       formSectionRef={formSectionRef}
       guideSectionRef={guideSectionRef}
       resultsSectionRef={resultsSectionRef}
