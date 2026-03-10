@@ -701,11 +701,11 @@ h1 {
   position: relative;
   z-index: 1;
   display: block;
-  width: 100%;
-  aspect-ratio: 1 / 1;
+  width: min(100%, 320px);
+  aspect-ratio: 4 / 5;
   object-fit: cover;
-  margin: 18px 0 22px;
-  border-radius: 28px;
+  margin: 18px auto 22px;
+  border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.04);
   box-shadow: 0 24px 54px rgba(0, 0, 0, 0.28);
@@ -1162,5 +1162,10 @@ h1 {
   .hero-desc,
   .result-summary {
     font-size: 16px;
+  }
+
+  .result-artwork {
+    width: min(100%, 260px);
+    aspect-ratio: 5 / 6;
   }
 }
