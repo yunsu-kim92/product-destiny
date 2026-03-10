@@ -12,6 +12,7 @@ import PolicySection from './components/PolicySection.jsx';
 import StaticPage from './components/StaticPage.jsx';
 import Footer from './components/Footer.jsx';
 import { DEFAULT_LANGUAGE, LANGUAGES, translate } from './i18n/translations.js';
+import { buildPageUrl } from './seo.js';
 import { mockAnalyze } from './utils/mockAnalyze.js';
 import { validateForm } from './utils/validateForm.js';
 
@@ -72,53 +73,55 @@ function HomePage({
     <div className="page-shell">
       <div className="container">
         <Navbar language={language} setLanguage={setLanguage} t={t} />
-        <HeroSection
-          t={t}
-          onPrimaryCta={() => scrollToRef(formSectionRef)}
-          onSecondaryCta={() => scrollToRef(guideSectionRef)}
-        />
+        <main>
+          <HeroSection
+            t={t}
+            onPrimaryCta={() => scrollToRef(formSectionRef)}
+            onSecondaryCta={() => scrollToRef(guideSectionRef)}
+          />
 
-        <section className="section" id="start" ref={formSectionRef}>
-          <div className="section-head">
-            <span className="section-kicker">{t('form.kicker')}</span>
-            <h2 className="section-title">{t('form.title')}</h2>
-            <p className="section-subtitle">{t('form.desc')}</p>
+          <section className="section" id="start" ref={formSectionRef}>
+            <div className="section-head">
+              <span className="section-kicker">{t('form.kicker')}</span>
+              <h2 className="section-title">{t('form.title')}</h2>
+              <p className="section-subtitle">{t('form.desc')}</p>
+            </div>
+
+            <div className="service-grid">
+              <DestinyForm
+                t={t}
+                formData={formData}
+                loading={loading}
+                error={error}
+                notice={notice}
+                onChange={onChange}
+                onSubmit={onSubmit}
+                onSecondaryAction={() => scrollToRef(resultsSectionRef)}
+              />
+              <ServiceFlowCard t={t} />
+            </div>
+          </section>
+
+          <div ref={guideSectionRef}>
+            <EditorialSection t={t} />
           </div>
 
-          <div className="service-grid">
-            <DestinyForm
-              t={t}
-              formData={formData}
-              loading={loading}
-              error={error}
-              notice={notice}
-              onChange={onChange}
-              onSubmit={onSubmit}
-              onSecondaryAction={() => scrollToRef(resultsSectionRef)}
-            />
-            <ServiceFlowCard t={t} />
-          </div>
-        </section>
+          <ResultSection
+            t={t}
+            result={result}
+            submittedName={submittedName}
+            sectionRef={resultsSectionRef}
+            lockedRef={lockedReportRef}
+            onRetry={onRetry}
+            onUnlock={onUnlock}
+            onScrollToLocked={onScrollToLocked}
+          />
 
-        <div ref={guideSectionRef}>
-          <EditorialSection t={t} />
-        </div>
-
-        <ResultSection
-          t={t}
-          result={result}
-          submittedName={submittedName}
-          sectionRef={resultsSectionRef}
-          lockedRef={lockedReportRef}
-          onRetry={onRetry}
-          onUnlock={onUnlock}
-          onScrollToLocked={onScrollToLocked}
-        />
-
-        <PartnershipSection t={t} />
-        <FaqSection t={t} />
-        <CommentsSection t={t} />
-        <PolicySection t={t} />
+          <PartnershipSection t={t} />
+          <FaqSection t={t} />
+          <CommentsSection t={t} />
+          <PolicySection t={t} />
+        </main>
         <Footer t={t} />
       </div>
     </div>
@@ -163,11 +166,49 @@ function App() {
       },
     };
     const routeMeta = routeMap[pathname] || routeMap['/'];
+    const pageUrl = buildPageUrl(pathname);
     document.title = routeMeta.title;
 
     const descriptionTag = document.querySelector('meta[name="description"]');
     if (descriptionTag) {
       descriptionTag.setAttribute('content', routeMeta.description);
+    }
+
+    const canonicalLink =
+      document.querySelector('link[rel="canonical"]') || document.createElement('link');
+    canonicalLink.setAttribute('rel', 'canonical');
+    canonicalLink.setAttribute('href', pageUrl);
+    if (!canonicalLink.parentNode) {
+      document.head.appendChild(canonicalLink);
+    }
+
+    const upsertMeta = (selector, attr, value) => {
+      const element = document.querySelector(selector);
+      if (element) {
+        element.setAttribute(attr, value);
+      }
+    };
+
+    upsertMeta('meta[property="og:title"]', 'content', routeMeta.title);
+    upsertMeta('meta[property="og:description"]', 'content', routeMeta.description);
+    upsertMeta('meta[property="og:url"]', 'content', pageUrl);
+    upsertMeta('meta[name="twitter:title"]', 'content', routeMeta.title);
+    upsertMeta('meta[name="twitter:description"]', 'content', routeMeta.description);
+
+    const structuredData = document.getElementById('structured-data');
+    if (structuredData) {
+      structuredData.textContent = JSON.stringify(
+        {
+          '@context': 'https://schema.org',
+          '@type': pathname === '/' ? 'WebSite' : 'WebPage',
+          name: routeMeta.title,
+          url: pageUrl,
+          inLanguage: language,
+          description: routeMeta.description,
+        },
+        null,
+        2,
+      );
     }
 
     window.localStorage.setItem('kdestiny-language', language);
@@ -342,12 +383,14 @@ function App() {
       <div className="page-shell">
         <div className="container">
           <Navbar language={language} setLanguage={setLanguage} t={t} isSubpage />
-          <StaticPage
-            title={activePage.title}
-            description={activePage.description}
-            sections={activePage.sections}
-            cta={activePage.cta}
-          />
+          <main>
+            <StaticPage
+              title={activePage.title}
+              description={activePage.description}
+              sections={activePage.sections}
+              cta={activePage.cta}
+            />
+          </main>
           <Footer t={t} />
         </div>
       </div>
