@@ -1,9 +1,11 @@
-export const SUPPORTED_LANGUAGES = ['ko', 'en'] as const;
+export const SUPPORTED_LANGUAGES = ['ko', 'en', 'ja'] as const;
 
 export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
 
 export type Env = {
   OPENAI_API_KEY?: string;
+  OPENAI_FREE_PROMPT_ID?: string;
+  OPENAI_FREE_PROMPT_VERSION?: string;
   OPENAI_PROMPT_ID?: string;
   OPENAI_PROMPT_VERSION?: string;
 };
@@ -14,6 +16,8 @@ export type AnalysisRequest = {
   birthtime?: string;
   gender?: string;
   language: SupportedLanguage;
+  calendarType: 'solar';
+  timezone: string;
 };
 
 type ValidationResult =
@@ -44,6 +48,14 @@ export function validateAnalysisInput(input: unknown): ValidationResult {
   const birthtime = typeof payload.birthtime === 'string' ? payload.birthtime.trim() : '';
   const gender = typeof payload.gender === 'string' ? payload.gender.trim() : '';
   const language = payload.language;
+  const calendarType =
+    payload.calendarType === 'solar' || payload.calendarType === undefined
+      ? 'solar'
+      : null;
+  const timezone =
+    typeof payload.timezone === 'string' && payload.timezone.trim()
+      ? payload.timezone.trim()
+      : 'Asia/Seoul';
 
   if (!name) {
     return {
@@ -62,7 +74,14 @@ export function validateAnalysisInput(input: unknown): ValidationResult {
   if (!isSupportedLanguage(language)) {
     return {
       ok: false,
-      message: 'The "language" field must be one of: ko, en.',
+      message: 'The "language" field must be one of: ko, en, ja.',
+    };
+  }
+
+  if (!calendarType) {
+    return {
+      ok: false,
+      message: 'The "calendarType" field must be "solar" for the current MVP.',
     };
   }
 
@@ -74,6 +93,8 @@ export function validateAnalysisInput(input: unknown): ValidationResult {
       birthtime: birthtime || '',
       gender: gender || '',
       language,
+      calendarType,
+      timezone,
     },
   };
 }

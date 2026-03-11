@@ -1,82 +1,165 @@
-export type Metric = {
-  label: string;
-  value: string;
+export type Pillar = {
+  stem: string;
+  branch: string;
 };
 
-export type FreeAnalysisData = {
-  typeName: string;
-  summary: string;
-  metrics: [Metric, Metric, Metric];
-  preview: string;
+export type FiveElements = {
+  wood: number;
+  fire: number;
+  earth: number;
+  metal: number;
+  water: number;
+};
+
+export type FreeReading = {
+  sajuReading: string;
+  coreNature: string;
+  lifeWorkFlow: string;
+  relationshipPattern: string;
+  guidance: string;
   fullReportLocked: true;
-  imageDataUrl?: string;
-};
-
-export type FullReport = {
-  personality: string;
-  career: string;
-  money: string;
-  relationship: string;
-  timing: string;
-  advice: string;
 };
 
 export type FullAnalysisData = {
-  typeName: string;
   summary: string;
-  metrics: [Metric, Metric, Metric];
-  preview: string;
+  personality: string;
+  work: string;
+  relationship: string;
+  money: string;
+  timing: string;
+  guidance: string;
   fullReportLocked: false;
-  fullReport: FullReport;
 };
 
-const metricSchema = {
+export type FreeAnalysisData = {
+  input: {
+    name: string;
+    birthdate: string;
+    birthtime: string;
+    gender: string;
+    language: string;
+    calendarType: 'solar';
+    timezone: string;
+  };
+  manse: {
+    yearPillar: Pillar;
+    monthPillar: Pillar;
+    dayPillar: Pillar;
+    hourPillar: Pillar;
+  };
+  dayMaster: string;
+  fiveElements: FiveElements;
+  signals: {
+    coreTone: string;
+    personalityHint: string;
+    workHint: string;
+    relationshipHint: string;
+    balanceHint: string;
+  };
+  reading: FreeReading;
+};
+
+const pillarSchema = {
   type: 'object',
   additionalProperties: false,
-  required: ['label', 'value'],
+  required: ['stem', 'branch'],
   properties: {
-    label: {
-      type: 'string',
-      minLength: 1,
-      maxLength: 40,
-    },
-    value: {
-      type: 'string',
-      pattern: '^[0-9]{1,3}%$',
-    },
+    stem: { type: 'string', minLength: 1, maxLength: 40 },
+    branch: { type: 'string', minLength: 1, maxLength: 40 },
+  },
+} as const;
+
+export const freeReadingSchema = {
+  type: 'object',
+  additionalProperties: false,
+  required: [
+    'sajuReading',
+    'coreNature',
+    'lifeWorkFlow',
+    'relationshipPattern',
+    'guidance',
+    'fullReportLocked',
+  ],
+  properties: {
+    sajuReading: { type: 'string', minLength: 1, maxLength: 500 },
+    coreNature: { type: 'string', minLength: 1, maxLength: 320 },
+    lifeWorkFlow: { type: 'string', minLength: 1, maxLength: 320 },
+    relationshipPattern: { type: 'string', minLength: 1, maxLength: 320 },
+    guidance: { type: 'string', minLength: 1, maxLength: 320 },
+    fullReportLocked: { type: 'boolean', const: true },
   },
 } as const;
 
 export const freeAnalysisSchema = {
   type: 'object',
   additionalProperties: false,
-  required: ['typeName', 'summary', 'metrics', 'preview', 'fullReportLocked'],
+  required: ['input', 'manse', 'dayMaster', 'fiveElements', 'signals', 'reading'],
   properties: {
-    typeName: {
-      type: 'string',
-      minLength: 1,
-      maxLength: 80,
+    input: {
+      type: 'object',
+      additionalProperties: false,
+      required: [
+        'name',
+        'birthdate',
+        'birthtime',
+        'gender',
+        'language',
+        'calendarType',
+        'timezone',
+      ],
+      properties: {
+        name: { type: 'string', minLength: 1, maxLength: 80 },
+        birthdate: { type: 'string', minLength: 10, maxLength: 10 },
+        birthtime: { type: 'string', minLength: 0, maxLength: 5 },
+        gender: { type: 'string', minLength: 0, maxLength: 20 },
+        language: { type: 'string', minLength: 2, maxLength: 5 },
+        calendarType: { type: 'string', const: 'solar' },
+        timezone: { type: 'string', minLength: 1, maxLength: 80 },
+      },
     },
-    summary: {
-      type: 'string',
-      minLength: 1,
-      maxLength: 320,
+    manse: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['yearPillar', 'monthPillar', 'dayPillar', 'hourPillar'],
+      properties: {
+        yearPillar: pillarSchema,
+        monthPillar: pillarSchema,
+        dayPillar: pillarSchema,
+        hourPillar: pillarSchema,
+      },
     },
-    metrics: {
-      type: 'array',
-      minItems: 3,
-      maxItems: 3,
-      items: metricSchema,
+    dayMaster: { type: 'string', minLength: 1, maxLength: 40 },
+    fiveElements: {
+      type: 'object',
+      additionalProperties: false,
+      required: ['wood', 'fire', 'earth', 'metal', 'water'],
+      properties: {
+        wood: { type: 'integer', minimum: 0, maximum: 20 },
+        fire: { type: 'integer', minimum: 0, maximum: 20 },
+        earth: { type: 'integer', minimum: 0, maximum: 20 },
+        metal: { type: 'integer', minimum: 0, maximum: 20 },
+        water: { type: 'integer', minimum: 0, maximum: 20 },
+      },
     },
-    preview: {
-      type: 'string',
-      minLength: 1,
-      maxLength: 500,
+    signals: {
+      type: 'object',
+      additionalProperties: false,
+      required: [
+        'coreTone',
+        'personalityHint',
+        'workHint',
+        'relationshipHint',
+        'balanceHint',
+      ],
+      properties: {
+        coreTone: { type: 'string', minLength: 1, maxLength: 160 },
+        personalityHint: { type: 'string', minLength: 1, maxLength: 240 },
+        workHint: { type: 'string', minLength: 1, maxLength: 240 },
+        relationshipHint: { type: 'string', minLength: 1, maxLength: 240 },
+        balanceHint: { type: 'string', minLength: 1, maxLength: 240 },
+      },
     },
-    fullReportLocked: {
-      type: 'boolean',
-      const: true,
-    },
+    reading: freeReadingSchema,
   },
 } as const;
 
@@ -84,51 +167,23 @@ export const fullAnalysisSchema = {
   type: 'object',
   additionalProperties: false,
   required: [
-    'typeName',
     'summary',
-    'metrics',
-    'preview',
+    'personality',
+    'work',
+    'relationship',
+    'money',
+    'timing',
+    'guidance',
     'fullReportLocked',
-    'fullReport',
   ],
   properties: {
-    typeName: {
-      type: 'string',
-      minLength: 1,
-      maxLength: 80,
-    },
-    summary: {
-      type: 'string',
-      minLength: 1,
-      maxLength: 320,
-    },
-    metrics: {
-      type: 'array',
-      minItems: 3,
-      maxItems: 3,
-      items: metricSchema,
-    },
-    preview: {
-      type: 'string',
-      minLength: 1,
-      maxLength: 500,
-    },
-    fullReportLocked: {
-      type: 'boolean',
-      const: false,
-    },
-    fullReport: {
-      type: 'object',
-      additionalProperties: false,
-      required: ['personality', 'career', 'money', 'relationship', 'timing', 'advice'],
-      properties: {
-        personality: { type: 'string', minLength: 1, maxLength: 1200 },
-        career: { type: 'string', minLength: 1, maxLength: 1200 },
-        money: { type: 'string', minLength: 1, maxLength: 1200 },
-        relationship: { type: 'string', minLength: 1, maxLength: 1200 },
-        timing: { type: 'string', minLength: 1, maxLength: 1200 },
-        advice: { type: 'string', minLength: 1, maxLength: 1200 },
-      },
-    },
+    summary: { type: 'string', minLength: 1, maxLength: 500 },
+    personality: { type: 'string', minLength: 1, maxLength: 1200 },
+    work: { type: 'string', minLength: 1, maxLength: 1200 },
+    relationship: { type: 'string', minLength: 1, maxLength: 1200 },
+    money: { type: 'string', minLength: 1, maxLength: 1200 },
+    timing: { type: 'string', minLength: 1, maxLength: 1200 },
+    guidance: { type: 'string', minLength: 1, maxLength: 1200 },
+    fullReportLocked: { type: 'boolean', const: false },
   },
 } as const;

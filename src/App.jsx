@@ -1,4 +1,4 @@
-import { Suspense, lazy, useEffect, useRef, useState } from 'react';
+import { Suspense, lazy, useCallback, useEffect, useRef, useState } from 'react';
 import Navbar from './components/Navbar.jsx';
 import HeroSection from './components/HeroSection.jsx';
 import DestinyForm from './components/DestinyForm.jsx';
@@ -6,9 +6,15 @@ import ServiceFlowCard from './components/ServiceFlowCard.jsx';
 import ResultSection from './components/ResultSection.jsx';
 import QuickAnswersSection from './components/QuickAnswersSection.jsx';
 import Footer from './components/Footer.jsx';
+import ScrollTopButton from './components/ScrollTopButton.jsx';
+import SubscriptionSection from './components/SubscriptionSection.jsx';
 import { DEFAULT_LANGUAGE, LANGUAGES, translate } from './i18n/translations.js';
 import { buildPageUrl } from './seo.js';
-import { getCachedAnalysis, setCachedAnalysis } from './utils/analysisCache.js';
+import {
+  clearAnalysisCache,
+  getCachedAnalysis,
+  setCachedAnalysis,
+} from './utils/analysisCache.js';
 import { mockAnalyze } from './utils/mockAnalyze.js';
 import { validateForm } from './utils/validateForm.js';
 
@@ -21,12 +27,40 @@ const StaticPage = lazy(() => import('./components/StaticPage.jsx'));
 
 const supportedLanguages = new Set(LANGUAGES.map((languageOption) => languageOption.value));
 
-const initialLanguage =
-  typeof window !== 'undefined'
-    ? supportedLanguages.has(window.localStorage.getItem('kdestiny-language'))
-      ? window.localStorage.getItem('kdestiny-language')
-      : DEFAULT_LANGUAGE
-    : DEFAULT_LANGUAGE;
+function normalizeLanguage(value) {
+  if (!value) {
+    return null;
+  }
+
+  const normalized = String(value).toLowerCase().split('-')[0];
+  return supportedLanguages.has(normalized) ? normalized : null;
+}
+
+function resolveInitialLanguage() {
+  if (typeof window === 'undefined') {
+    return DEFAULT_LANGUAGE;
+  }
+
+  const storedLanguage = normalizeLanguage(window.localStorage.getItem('kdestiny-language'));
+  if (storedLanguage) {
+    return storedLanguage;
+  }
+
+  const browserLanguages = Array.isArray(window.navigator.languages)
+    ? window.navigator.languages
+    : [window.navigator.language];
+
+  for (const candidate of browserLanguages) {
+    const detected = normalizeLanguage(candidate);
+    if (detected) {
+      return detected;
+    }
+  }
+
+  return DEFAULT_LANGUAGE;
+}
+
+const initialLanguage = resolveInitialLanguage();
 
 const initialFormData = {
   name: '',
@@ -47,7 +81,15 @@ function isLocalPreview() {
 }
 
 function getSubmissionErrorMessage(error, t) {
-  if (error instanceof Error && error.message.trim()) {
+  if (
+    error instanceof Error &&
+    error.message.trim() &&
+    ![
+      'API response was not valid JSON',
+      'API response was not ok',
+      'Failed to fetch',
+    ].includes(error.message.trim())
+  ) {
     return error.message;
   }
 
@@ -90,6 +132,9 @@ function HomePage({
   onRetry,
   onUnlock,
   onScrollToLocked,
+  loadingProgress,
+  loadingStage,
+  showScrollTop,
 }) {
   const scrollToRef = (targetRef) => {
     targetRef.current?.scrollIntoView({
@@ -123,6 +168,8 @@ function HomePage({
                 t={t}
                 formData={formData}
                 loading={loading}
+                loadingProgress={loadingProgress}
+                loadingStage={loadingStage}
                 error={error}
                 notice={notice}
                 onChange={onChange}
@@ -132,12 +179,6 @@ function HomePage({
               <ServiceFlowCard t={t} />
             </div>
           </section>
-
-          <Suspense fallback={null}>
-            <div ref={guideSectionRef}>
-              <EditorialSection t={t} />
-            </div>
-          </Suspense>
 
           <ResultSection
             t={t}
@@ -150,14 +191,20 @@ function HomePage({
             onScrollToLocked={onScrollToLocked}
           />
 
+          <SubscriptionSection t={t} />
+
           <Suspense fallback={null}>
-            <PartnershipSection t={t} />
             <FaqSection t={t} />
-            <CommentsSection t={t} />
+            <div ref={guideSectionRef}>
+              <EditorialSection t={t} />
+            </div>
             <PolicySection t={t} onNavigate={onNavigate} />
+            <PartnershipSection t={t} />
+            <CommentsSection t={t} />
           </Suspense>
         </main>
         <Footer t={t} onNavigate={onNavigate} />
+        <ScrollTopButton t={t} visible={showScrollTop} />
       </div>
     </div>
   );
@@ -168,18 +215,20 @@ function App() {
   const [pathname, setPathname] = useState(getCurrentPath);
   const [formData, setFormData] = useState(initialFormData);
   const [loading, setLoading] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [loadingStage, setLoadingStage] = useState(0);
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [result, setResult] = useState(null);
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [submittedName, setSubmittedName] = useState('');
-  const [isFormLanguageDirty, setIsFormLanguageDirty] = useState(false);
   const formSectionRef = useRef(null);
   const guideSectionRef = useRef(null);
   const resultsSectionRef = useRef(null);
   const lockedReportRef = useRef(null);
 
-  const t = (key, values) => translate(key, language, values);
+  const t = useCallback((key, values) => translate(key, language, values), [language]);
 
   useEffect(() => {
     document.documentElement.lang = language;
@@ -311,7 +360,7 @@ function App() {
     }
 
     window.localStorage.setItem('kdestiny-language', language);
-  }, [language, pathname]);
+  }, [language, pathname, t]);
 
   useEffect(() => {
     const handlePopState = () => setPathname(getCurrentPath());
@@ -320,10 +369,24 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (!isFormLanguageDirty) {
-      setFormData((current) => ({ ...current, language }));
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 720);
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    if (isLocalPreview()) {
+      clearAnalysisCache();
     }
-  }, [language, isFormLanguageDirty]);
+  }, []);
+
+  useEffect(() => {
+    setFormData((current) => ({ ...current, language }));
+  }, [language]);
 
   useEffect(() => {
     if (result && hasSubmitted) {
@@ -334,15 +397,49 @@ function App() {
     }
   }, [result, hasSubmitted]);
 
+  useEffect(() => {
+    if (!loading) {
+      setLoadingProgress(0);
+      setLoadingStage(0);
+      return;
+    }
+
+    let frameId = 0;
+    let timeoutId = 0;
+    let current = 0;
+    const stageThresholds = [14, 33, 56, 78, 100];
+
+    const tick = () => {
+      current = Math.min(current + Math.max(1, (100 - current) * 0.08), 92);
+      const rounded = Math.round(current);
+      setLoadingProgress(rounded);
+
+      const nextStage = stageThresholds.findIndex((threshold) => rounded <= threshold);
+      setLoadingStage(nextStage === -1 ? stageThresholds.length - 1 : nextStage);
+
+      timeoutId = window.setTimeout(() => {
+        frameId = window.requestAnimationFrame(tick);
+      }, 180);
+    };
+
+    tick();
+
+    return () => {
+      window.cancelAnimationFrame(frameId);
+      window.clearTimeout(timeoutId);
+    };
+  }, [loading]);
+
   const handleFormChange = (name, value) => {
+    if (name === 'language') {
+      setLanguage(value);
+      return;
+    }
+
     setFormData((current) => ({
       ...current,
       [name]: value,
     }));
-
-    if (name === 'language') {
-      setIsFormLanguageDirty(true);
-    }
   };
 
   const handleNavigate = (nextHref) => {
@@ -379,6 +476,10 @@ function App() {
       ...formData,
       name: formData.name.trim(),
     };
+    const requestPayload = {
+      ...payload,
+      language,
+    };
 
     const validation = validateForm(payload, t);
     if (!validation.isValid) {
@@ -386,15 +487,17 @@ function App() {
       return;
     }
 
-    const cachedResult = getCachedAnalysis(payload);
+    const cachedResult = getCachedAnalysis(requestPayload);
     if (cachedResult) {
-      setSubmittedName(payload.name || 'Guest');
+      setSubmittedName(payload.name || t('common.guest'));
       setResult(cachedResult);
       setNotice(t('cachedResultNotice'));
       return;
     }
 
     setLoading(true);
+    setLoadingProgress(6);
+    setLoadingStage(0);
 
     try {
       let nextResult;
@@ -405,10 +508,17 @@ function App() {
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify(payload),
+          body: JSON.stringify(requestPayload),
         });
 
-        const body = await response.json();
+        const rawBody = await response.text();
+        let body;
+
+        try {
+          body = rawBody ? JSON.parse(rawBody) : null;
+        } catch {
+          throw new Error('API response was not valid JSON');
+        }
 
         if (!response.ok || !body?.ok) {
           throw new Error(body?.error?.message || 'API response was not ok');
@@ -418,15 +528,21 @@ function App() {
       } catch (fetchError) {
         if (isLocalPreview()) {
           nextResult = await mockAnalyze(payload);
+          if (nextResult?.input) {
+            nextResult.input.language = language;
+          }
           setNotice(t('fallbackNotice'));
         } else {
           throw fetchError;
         }
       }
 
-      setSubmittedName(payload.name || 'Guest');
+      setLoadingProgress(100);
+      setLoadingStage(4);
+      await new Promise((resolve) => window.setTimeout(resolve, 220));
+      setSubmittedName(payload.name || t('common.guest'));
       setResult(nextResult);
-      setCachedAnalysis(payload, nextResult);
+      setCachedAnalysis(requestPayload, nextResult);
     } catch (submissionError) {
       setError(getSubmissionErrorMessage(submissionError, t));
     } finally {
@@ -537,6 +653,7 @@ function App() {
             </Suspense>
           </main>
           <Footer t={t} onNavigate={handleNavigate} />
+          <ScrollTopButton t={t} visible={showScrollTop} />
         </div>
       </div>
     );
@@ -554,6 +671,9 @@ function App() {
       lockedReportRef={lockedReportRef}
       formData={formData}
       loading={loading}
+      loadingProgress={loadingProgress}
+      loadingStage={loadingStage}
+      showScrollTop={showScrollTop}
       error={error}
       notice={notice}
       result={result}

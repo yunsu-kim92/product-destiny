@@ -6,6 +6,14 @@ function canUseStorage() {
   return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
 }
 
+function isLocalPreview() {
+  if (typeof window === 'undefined') {
+    return false;
+  }
+
+  return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+}
+
 function normalizePayload(payload) {
   return {
     name: String(payload.name || '').trim().toLowerCase(),
@@ -51,6 +59,11 @@ function writeCacheStore(store) {
 }
 
 export function getCachedAnalysis(payload) {
+  if (isLocalPreview()) {
+    clearAnalysisCache();
+    return null;
+  }
+
   const store = readCacheStore();
   const entry = store[buildCacheEntryKey(payload)];
 
@@ -62,6 +75,11 @@ export function getCachedAnalysis(payload) {
 }
 
 export function setCachedAnalysis(payload, data) {
+  if (isLocalPreview()) {
+    clearAnalysisCache();
+    return;
+  }
+
   const store = readCacheStore();
   const nextKey = buildCacheEntryKey(payload);
   const nextStore = {
@@ -78,4 +96,16 @@ export function setCachedAnalysis(payload, data) {
     .slice(0, MAX_CACHE_ENTRIES);
 
   writeCacheStore(Object.fromEntries(prunedEntries));
+}
+
+export function clearAnalysisCache() {
+  if (!canUseStorage()) {
+    return;
+  }
+
+  try {
+    window.localStorage.removeItem(CACHE_KEY);
+  } catch {
+    // Ignore storage access failures.
+  }
 }

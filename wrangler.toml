@@ -1,3 +1,6 @@
 name = "product-destiny"
 compatibility_date = "2026-03-09"
 pages_build_output_dir = "dist"
+
+[vars]
+OPENAI_FREE_PROMPT_ID = "pmpt_69b0fd614bc081969068f2b503dc3f460d9269d281e1d598"

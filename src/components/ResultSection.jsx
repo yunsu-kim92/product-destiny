@@ -1,4 +1,5 @@
 import LockedReport from './LockedReport.jsx';
+import ManseCard from './ManseCard.jsx';
 
 function ResultSection({
   t,
@@ -10,7 +11,15 @@ function ResultSection({
   onUnlock,
   onScrollToLocked,
 }) {
-  const metrics = Array.isArray(result?.metrics) ? result.metrics.slice(0, 3) : [];
+  const readingBlocks = result
+    ? [
+        { label: t('reading.sajuReading'), value: result.reading.sajuReading },
+        { label: t('reading.coreNature'), value: result.reading.coreNature },
+        { label: t('reading.lifeWorkFlow'), value: result.reading.lifeWorkFlow },
+        { label: t('reading.relationshipPattern'), value: result.reading.relationshipPattern },
+        { label: t('reading.guidance'), value: result.reading.guidance },
+      ]
+    : [];
 
   return (
     <section className="section" id="results" ref={sectionRef}>
@@ -18,6 +27,19 @@ function ResultSection({
         <span className="section-kicker">{t('results.kicker')}</span>
         <h2 className="section-title">{t('results.title')}</h2>
         <p className="section-subtitle">{t('results.desc')}</p>
+      </div>
+
+      <div className="report-info-grid">
+        <article className="card">
+          <h3>{t('results.includesTitle')}</h3>
+          <ul className="feature-list">
+            <li>{t('results.include1')}</li>
+            <li>{t('results.include2')}</li>
+            <li>{t('results.include3')}</li>
+            <li>{t('results.include4')}</li>
+            <li>{t('results.include5')}</li>
+          </ul>
+        </article>
       </div>
 
       <div className="result-shell">
@@ -28,28 +50,16 @@ function ResultSection({
               <span>{t('resultMeta', { name: submittedName })}</span>
             </div>
 
-            {result.imageDataUrl ? (
-              <img
-                className="result-artwork"
-                src={result.imageDataUrl}
-                alt={result.typeName}
-                loading="eager"
-              />
-            ) : null}
+            <ManseCard t={t} result={result} />
 
-            <h3 className="result-type">{result.typeName}</h3>
-            <p className="result-summary">{result.summary}</p>
-
-            <div className="metrics-grid">
-              {metrics.map((metric) => (
-                <div className="metric-card" key={`${metric.label}-${metric.value}`}>
-                  <span className="metric-label">{metric.label}</span>
-                  <strong className="metric-value">{metric.value}</strong>
+            <div className="report-grid report-grid-wide">
+              {readingBlocks.map((block) => (
+                <div className="report-card" key={block.label}>
+                  <span className="report-label">{block.label}</span>
+                  <p className="report-value">{block.value}</p>
                 </div>
               ))}
             </div>
-
-            <p className="result-preview">{result.preview}</p>
 
             <div className="result-actions result-actions-top">
               <button className="btn btn-primary" type="button" onClick={onScrollToLocked}>
@@ -69,10 +79,10 @@ function ResultSection({
 
         <LockedReport
           t={t}
-          preview={result?.preview}
+          preview={result?.reading?.guidance}
           onUnlock={onUnlock}
           lockedRef={lockedRef}
-          isLocked={result?.fullReportLocked !== false}
+          isLocked={result?.reading?.fullReportLocked !== false}
         />
       </div>
     </section>

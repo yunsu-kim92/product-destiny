@@ -34,7 +34,7 @@ function Navbar({ language, setLanguage, t, isSubpage = false, onNavigate }) {
         >
           {LANGUAGES.map((option) => (
             <option key={option.value} value={option.value}>
-              {option.label}
+              {t(option.labelKey)}
             </option>
           ))}
         </select>

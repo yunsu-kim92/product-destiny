@@ -1,4 +1,5 @@
-import { buildFullSystemPrompt } from '../_lib/prompts';
+import { buildFreeAnalysisBase } from '../_lib/saju';
+import { buildFreeUserPrompt, buildFullSystemPrompt } from '../_lib/prompts';
 import { errorResponse, jsonResponse, parseJsonBody } from '../_lib/json';
 import { requestStructuredOutput } from '../_lib/openai';
 import { fullAnalysisSchema, type FullAnalysisData } from '../_lib/schemas';
@@ -22,12 +23,13 @@ export async function onRequestPost(context: Context) {
   }
 
   try {
+    const base = buildFreeAnalysisBase(validation.data);
     const data = await requestStructuredOutput<FullAnalysisData>({
       env: context.env,
       schemaName: 'k_destiny_full_analysis',
       schema: fullAnalysisSchema,
       systemPrompt: buildFullSystemPrompt(validation.data.language),
-      payload: validation.data,
+      inputText: buildFreeUserPrompt(base),
     });
 
     return jsonResponse({

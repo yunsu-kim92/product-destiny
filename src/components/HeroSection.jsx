@@ -1,4 +1,13 @@
+import ElementsBalanceChart from './ElementsBalanceChart.jsx';
+
 function HeroSection({ t, onPrimaryCta, onSecondaryCta }) {
+  const sampleItems = [
+    { label: t('sample.item1Label'), value: t('sample.item1Value') },
+    { label: t('sample.item2Label'), value: t('sample.item2Value') },
+    { label: t('sample.item4Label'), value: t('sample.item4Value') },
+    { label: t('sample.item5Label'), value: t('sample.item5Value') },
+  ];
+
   return (
     <section className="hero" id="top">
       <div className="hero-copy">
@@ -26,7 +35,7 @@ function HeroSection({ t, onPrimaryCta, onSecondaryCta }) {
         </div>
       </div>
 
-      <div className="hero-panel">
+        <div className="hero-panel">
         <div className="orb orb-a"></div>
         <div className="orb orb-b"></div>
         <div className="sample-label">{t('sample.label')}</div>
@@ -36,19 +45,20 @@ function HeroSection({ t, onPrimaryCta, onSecondaryCta }) {
           <h2 className="sample-title">{t('sample.title')}</h2>
           <p className="sample-desc">{t('sample.desc')}</p>
 
-          <div className="sample-stats">
-            <div className="sample-stat">
-              <strong>{t('sample.stat1v')}</strong>
-              <span>{t('sample.stat1l')}</span>
-            </div>
-            <div className="sample-stat">
-              <strong>{t('sample.stat2v')}</strong>
-              <span>{t('sample.stat2l')}</span>
-            </div>
-            <div className="sample-stat">
-              <strong>{t('sample.stat3v')}</strong>
-              <span>{t('sample.stat3l')}</span>
-            </div>
+          <div className="sample-report-list">
+            {sampleItems.map((item) => (
+              <div className="sample-report-item" key={item.label}>
+                <span>{item.label}</span>
+                <strong>{item.value}</strong>
+              </div>
+            ))}
+          </div>
+
+          <ElementsBalanceChart t={t} variant="hero" />
+
+          <div className="sample-highlight">
+            <span>{t('sample.footerLabel')}</span>
+            <p>{t('sample.footerValue')}</p>
           </div>
         </div>
       </div>

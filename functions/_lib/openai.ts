@@ -1,10 +1,8 @@
-import { buildImagePrompt, buildUserPrompt } from './prompts';
+import { buildImagePrompt } from './prompts';
 import type { FreeAnalysisData } from './schemas';
-import type { AnalysisRequest, Env } from './validators';
+import type { Env } from './validators';
 
 export const OPENAI_MODEL = 'gpt-5-mini';
-export const DEFAULT_PROMPT_ID = 'pmpt_69afac7cf8708197857cfc48545f299e095889951166ccf9';
-export const DEFAULT_PROMPT_VERSION = '1';
 
 type JsonSchema = {
   type: 'object';
@@ -53,12 +51,25 @@ function extractOutputText(payload: OpenAIResponseShape) {
   return '';
 }
 
+function summarizeOutput(payload: OpenAIResponseShape) {
+  const outputText = extractOutputText(payload);
+
+  if (outputText.trim()) {
+    return outputText.slice(0, 1200);
+  }
+
+  return JSON.stringify(payload.output || []).slice(0, 1200);
+}
+
 export async function requestStructuredOutput<T>(options: {
   env: Env;
   schemaName: string;
   schema: JsonSchema;
-  systemPrompt: string;
-  payload: AnalysisRequest;
+  systemPrompt?: string;
+  inputText: string;
+  promptId?: string;
+  promptVersion?: string;
+  maxOutputTokens?: number;
 }) {
   const apiKey = options.env.OPENAI_API_KEY;
 
@@ -66,65 +77,64 @@ export async function requestStructuredOutput<T>(options: {
     throw new Error('MISSING_API_KEY');
   }
 
-  const promptId = options.env.OPENAI_PROMPT_ID || DEFAULT_PROMPT_ID;
-  const promptVersion = options.env.OPENAI_PROMPT_VERSION || DEFAULT_PROMPT_VERSION;
-  const userInputText = buildUserPrompt(options.payload);
+  const textFormat = {
+    format: {
+      type: 'json_schema',
+      name: options.schemaName,
+      strict: true,
+      schema: options.schema,
+    },
+  };
 
-  const requestBody =
-    promptId
-      ? {
-          prompt: {
-            id: promptId,
-            version: promptVersion,
+  const requestBody = options.promptId
+    ? {
+        prompt: options.promptVersion
+          ? {
+              id: options.promptId,
+              version: options.promptVersion,
+            }
+          : {
+              id: options.promptId,
+            },
+        input: [
+          {
+            role: 'user',
+            content: [
+              {
+                type: 'input_text',
+                text: options.inputText,
+              },
+            ],
           },
-          input: [
-            {
-              role: 'user',
-              content: [
-                {
-                  type: 'input_text',
-                  text: userInputText,
-                },
-              ],
-            },
-          ],
-          reasoning: {
-            summary: 'auto',
+        ],
+        max_output_tokens: options.maxOutputTokens ?? 1400,
+        text: textFormat,
+      }
+    : {
+        model: OPENAI_MODEL,
+        input: [
+          {
+            role: 'system',
+            content: [
+              {
+                type: 'input_text',
+                text: options.systemPrompt || '',
+              },
+            ],
           },
-          store: true,
-          include: ['reasoning.encrypted_content'],
-        }
-      : {
-          model: OPENAI_MODEL,
-          input: [
-            {
-              role: 'system',
-              content: [
-                {
-                  type: 'input_text',
-                  text: options.systemPrompt,
-                },
-              ],
-            },
-            {
-              role: 'user',
-              content: [
-                {
-                  type: 'input_text',
-                  text: userInputText,
-                },
-              ],
-            },
-          ],
-          text: {
-            format: {
-              type: 'json_schema',
-              name: options.schemaName,
-              strict: true,
-              schema: options.schema,
-            },
+          {
+            role: 'user',
+            content: [
+              {
+                type: 'input_text',
+                text: options.inputText,
+              },
+            ],
           },
-        };
+        ],
+        max_output_tokens: options.maxOutputTokens ?? 1400,
+        text: textFormat,
+      };
 
   const response = await fetch('https://api.openai.com/v1/responses', {
     method: 'POST',
@@ -144,13 +154,15 @@ export async function requestStructuredOutput<T>(options: {
   const outputText = extractOutputText(json);
 
   if (!outputText) {
-    throw new Error('OPENAI_INVALID_RESPONSE');
+    console.error('OpenAI structured output missing text:', summarizeOutput(json));
+    throw new Error(`OPENAI_INVALID_RESPONSE:${summarizeOutput(json)}`);
   }
 
   try {
     return JSON.parse(outputText) as T;
   } catch {
-    throw new Error('OPENAI_INVALID_RESPONSE');
+    console.error('OpenAI structured output was not valid JSON:', outputText.slice(0, 1200));
+    throw new Error(`OPENAI_INVALID_RESPONSE:${outputText.slice(0, 1200)}`);
   }
 }
 
