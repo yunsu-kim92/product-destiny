@@ -9,10 +9,15 @@
     "pages:dev": "npx wrangler pages dev dist --compatibility-date=2026-03-09",
     "pages:preview": "npm run build && npm run pages:dev",
     "preview:pages": "npm run pages:preview",
+    "supabase:init": "supabase init",
+    "supabase:start": "supabase start",
+    "supabase:status": "supabase status",
+    "supabase:stop": "supabase stop",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.99.1",
     "lunar-typescript": "^1.8.6",
     "react": "^19.2.0",
     "react-dom": "^19.2.0"
@@ -27,6 +32,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
+    "supabase": "^2.78.1",
     "typescript": "~5.9.3",
     "typescript-eslint": "^8.48.0",
     "vite": "^7.3.1"

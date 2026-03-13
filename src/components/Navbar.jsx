@@ -1,7 +1,16 @@
 import { LANGUAGES } from '../i18n/translations.js';
 import AppLink from './AppLink.jsx';
 
-function Navbar({ language, setLanguage, t, isSubpage = false, onNavigate }) {
+function Navbar({
+  language,
+  setLanguage,
+  t,
+  isSubpage = false,
+  onNavigate,
+  authEnabled = false,
+  authUser = null,
+  onOpenAuth,
+}) {
   const homePrefix = isSubpage ? '/#' : '#';
 
   return (
@@ -25,6 +34,10 @@ function Navbar({ language, setLanguage, t, isSubpage = false, onNavigate }) {
             {t('nav.policy')}
           </AppLink>
         </div>
+
+        <button className="auth-trigger" type="button" onClick={onOpenAuth}>
+          {authUser ? authUser.email : authEnabled ? t('auth.openLogin') : t('auth.unavailable')}
+        </button>
 
         <select
           className="language-select"

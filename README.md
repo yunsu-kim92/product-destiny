@@ -16,6 +16,44 @@ This preview serves the production build through `wrangler pages dev`, so it is 
 
 SPA subpages such as `/about`, `/privacy`, `/terms`, `/refund`, and `/contact` are routed through `public/_redirects`.
 
+## Supabase Auth
+
+Email/password sign-up and login are wired with `@supabase/supabase-js`, and the local workflow is exposed through Supabase CLI scripts.
+
+1. Copy `.env.example` to `.env.local`
+2. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`
+3. Initialize Supabase once:
+
+```bash
+npm run supabase:init
+```
+
+4. Start the local stack when Docker is available:
+
+```bash
+npm run supabase:start
+```
+
+5. Check local URLs and keys:
+
+```bash
+npm run supabase:status
+```
+
+If the Vite auth env vars are missing, the app still renders but the auth dialog explains that Supabase has not been configured yet. The client now expects `VITE_SUPABASE_PUBLISHABLE_KEY` and still accepts `VITE_SUPABASE_ANON_KEY` as a fallback for compatibility.
+
+### Google login
+
+The auth modal also supports Google OAuth through Supabase.
+
+1. In Google Auth Platform, create a `Web application` OAuth client
+2. Add your app origins to `Authorized JavaScript origins`
+3. Add the Supabase callback URL from the Google provider page in the Supabase Dashboard to `Authorized redirect URIs`
+4. In Supabase Dashboard, enable the Google provider and save the Google client ID and client secret
+5. Keep your app URL in Supabase Auth URL Configuration allow-lists for both production and local development
+
+For local Supabase CLI development, the official callback URL is `http://127.0.0.1:54321/auth/v1/callback`.
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

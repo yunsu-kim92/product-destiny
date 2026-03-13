@@ -8,8 +8,10 @@ import QuickAnswersSection from './components/QuickAnswersSection.jsx';
 import Footer from './components/Footer.jsx';
 import ScrollTopButton from './components/ScrollTopButton.jsx';
 import SubscriptionSection from './components/SubscriptionSection.jsx';
+import AuthDialog from './components/AuthDialog.jsx';
 import { DEFAULT_LANGUAGE, LANGUAGES, translate } from './i18n/translations.js';
 import { buildPageUrl } from './seo.js';
+import { getSupabaseClient, isSupabaseConfigured } from './lib/supabaseClient.js';
 import {
   clearAnalysisCache,
   getCachedAnalysis,
@@ -135,6 +137,9 @@ function HomePage({
   loadingProgress,
   loadingStage,
   showScrollTop,
+  authEnabled,
+  authUser,
+  onOpenAuth,
 }) {
   const scrollToRef = (targetRef) => {
     targetRef.current?.scrollIntoView({
@@ -146,7 +151,15 @@ function HomePage({
   return (
     <div className="page-shell">
       <div className="container">
-        <Navbar language={language} setLanguage={setLanguage} t={t} onNavigate={onNavigate} />
+        <Navbar
+          language={language}
+          setLanguage={setLanguage}
+          t={t}
+          onNavigate={onNavigate}
+          authEnabled={authEnabled}
+          authUser={authUser}
+          onOpenAuth={onOpenAuth}
+        />
         <main>
           <HeroSection
             t={t}
@@ -223,6 +236,9 @@ function App() {
   const [result, setResult] = useState(null);
   const [hasSubmitted, setHasSubmitted] = useState(false);
   const [submittedName, setSubmittedName] = useState('');
+  const [authUser, setAuthUser] = useState(null);
+  const [authReady, setAuthReady] = useState(!isSupabaseConfigured);
+  const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const formSectionRef = useRef(null);
   const guideSectionRef = useRef(null);
   const resultsSectionRef = useRef(null);
@@ -385,6 +401,51 @@ function App() {
   }, []);
 
   useEffect(() => {
+    const supabase = getSupabaseClient();
+
+    if (!supabase) {
+      setAuthReady(true);
+      return undefined;
+    }
+
+    let isMounted = true;
+
+    supabase.auth
+      .getSession()
+      .then(({ data, error: sessionError }) => {
+        if (!isMounted) {
+          return;
+        }
+
+        if (sessionError) {
+          console.error(sessionError);
+        }
+
+        setAuthUser(data.session?.user ?? null);
+        setAuthReady(true);
+      })
+      .catch((sessionError) => {
+        if (!isMounted) {
+          return;
+        }
+
+        console.error(sessionError);
+        setAuthReady(true);
+      });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setAuthUser(session?.user ?? null);
+    });
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
     setFormData((current) => ({ ...current, language }));
   }, [language]);
 
@@ -464,6 +525,92 @@ function App() {
     }
 
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleOpenAuth = () => {
+    setAuthDialogOpen(true);
+  };
+
+  const handleCloseAuth = () => {
+    setAuthDialogOpen(false);
+  };
+
+  const requireSupabase = () => {
+    const supabase = getSupabaseClient();
+
+    if (!supabase) {
+      throw new Error(t('auth.configMissing'));
+    }
+
+    return supabase;
+  };
+
+  const handleSignUp = async (email, password) => {
+    const supabase = requireSupabase();
+    const redirectTo =
+      typeof window === 'undefined' ? undefined : `${window.location.origin}/`;
+
+    const { data, error: signUpError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: redirectTo,
+      },
+    });
+
+    if (signUpError) {
+      throw signUpError;
+    }
+
+    if (data.session?.user) {
+      return t('auth.signupSuccess');
+    }
+
+    return t('auth.checkEmail');
+  };
+
+  const handleSignIn = async (email, password) => {
+    const supabase = requireSupabase();
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (signInError) {
+      throw signInError;
+    }
+
+    return t('auth.signinSuccess');
+  };
+
+  const handleSignOut = async () => {
+    const supabase = requireSupabase();
+    const { error: signOutError } = await supabase.auth.signOut();
+
+    if (signOutError) {
+      throw signOutError;
+    }
+
+    return t('auth.signoutSuccess');
+  };
+
+  const handleSignInWithGoogle = async () => {
+    const supabase = requireSupabase();
+    const redirectTo =
+      typeof window === 'undefined' ? undefined : `${window.location.origin}/`;
+
+    const { error: oauthError } = await supabase.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo,
+      },
+    });
+
+    if (oauthError) {
+      throw oauthError;
+    }
+
+    return t('auth.googleRedirecting');
   };
 
   const handleSubmit = async (event) => {
@@ -640,6 +787,9 @@ function App() {
             t={t}
             isSubpage
             onNavigate={handleNavigate}
+            authEnabled={isSupabaseConfigured}
+            authUser={authUser}
+            onOpenAuth={handleOpenAuth}
           />
           <main>
             <Suspense fallback={null}>
@@ -654,40 +804,69 @@ function App() {
           </main>
           <Footer t={t} onNavigate={handleNavigate} />
           <ScrollTopButton t={t} visible={showScrollTop} />
+          <AuthDialog
+            t={t}
+            isOpen={authDialogOpen}
+            authReady={authReady}
+            authEnabled={isSupabaseConfigured}
+            user={authUser}
+            onClose={handleCloseAuth}
+            onSignIn={handleSignIn}
+            onSignInWithGoogle={handleSignInWithGoogle}
+            onSignUp={handleSignUp}
+            onSignOut={handleSignOut}
+          />
         </div>
       </div>
     );
   }
 
   return (
-    <HomePage
-      t={t}
-      language={language}
-      setLanguage={setLanguage}
-      onNavigate={handleNavigate}
-      formSectionRef={formSectionRef}
-      guideSectionRef={guideSectionRef}
-      resultsSectionRef={resultsSectionRef}
-      lockedReportRef={lockedReportRef}
-      formData={formData}
-      loading={loading}
-      loadingProgress={loadingProgress}
-      loadingStage={loadingStage}
-      showScrollTop={showScrollTop}
-      error={error}
-      notice={notice}
-      result={result}
-      submittedName={submittedName}
-      onChange={handleFormChange}
-      onSubmit={handleSubmit}
-      onRetry={() =>
-        formSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      }
-      onUnlock={() => window.alert(t('unlockAlert'))}
-      onScrollToLocked={() =>
-        lockedReportRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      }
-    />
+    <>
+      <HomePage
+        t={t}
+        language={language}
+        setLanguage={setLanguage}
+        onNavigate={handleNavigate}
+        formSectionRef={formSectionRef}
+        guideSectionRef={guideSectionRef}
+        resultsSectionRef={resultsSectionRef}
+        lockedReportRef={lockedReportRef}
+        formData={formData}
+        loading={loading}
+        loadingProgress={loadingProgress}
+        loadingStage={loadingStage}
+        showScrollTop={showScrollTop}
+        authEnabled={isSupabaseConfigured}
+        authUser={authUser}
+        onOpenAuth={handleOpenAuth}
+        error={error}
+        notice={notice}
+        result={result}
+        submittedName={submittedName}
+        onChange={handleFormChange}
+        onSubmit={handleSubmit}
+        onRetry={() =>
+          formSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+        onUnlock={() => window.alert(t('unlockAlert'))}
+        onScrollToLocked={() =>
+          lockedReportRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+        }
+      />
+      <AuthDialog
+        t={t}
+        isOpen={authDialogOpen}
+        authReady={authReady}
+        authEnabled={isSupabaseConfigured}
+        user={authUser}
+        onClose={handleCloseAuth}
+        onSignIn={handleSignIn}
+        onSignInWithGoogle={handleSignInWithGoogle}
+        onSignUp={handleSignUp}
+        onSignOut={handleSignOut}
+      />
+    </>
   );
 }
 
