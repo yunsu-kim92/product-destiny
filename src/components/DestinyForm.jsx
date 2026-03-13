@@ -73,9 +73,9 @@ function DestinyForm({
   const minuteOptions = Array.from({ length: 60 }, (_, index) => String(index).padStart(2, '0'));
 
   const handleTimePartChange = (part, value) => {
-    const nextPeriod = part === 'period' ? value : timeParts.period;
-    const nextHour12 = part === 'hour12' ? value : timeParts.hour12;
-    const nextMinute = part === 'minute' ? value : timeParts.minute;
+    const nextPeriod = part === 'period' ? value : (timeParts.period || 'am');
+    const nextHour12 = part === 'hour12' ? value : (timeParts.hour12 || '12');
+    const nextMinute = part === 'minute' ? value : (timeParts.minute || '00');
 
     onChange('birthtime', formatBirthTime(nextPeriod, nextHour12, nextMinute));
   };
