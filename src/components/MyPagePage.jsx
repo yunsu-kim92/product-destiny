@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import { getRecentCachedAnalyses } from '../utils/analysisCache.js';
 
 const DELETE_CONFIRM_TEXT = 'DELETE';
@@ -48,6 +48,7 @@ function MyPagePage({
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [activeSection, setActiveSection] = useState('results');
+  const [expandedResult, setExpandedResult] = useState(null);
 
   useEffect(() => {
     if (user) {
@@ -298,18 +299,52 @@ function MyPagePage({
               <h2 className="mypage-section-heading">{t('mypage.resultsTitle')}</h2>
               {cachedResults.length > 0 ? (
                 <div className="mypage-results-list">
-                  {cachedResults.map((res, i) => (
-                    <div key={i} className="mypage-result-item">
-                      <div className="result-item-info">
-                        <strong style={{ color: '#d4b068', fontSize: '1.1rem' }}>{res.input?.name || t('common.guest')}</strong>
-                        <span className="result-item-date">{formatTimestamp(res.savedAt, language)}</span>
+                  {cachedResults.map((res, i) => {
+                    const isExpanded = expandedResult === i;
+                    const reading = res.data?.reading;
+                    const readingBlocks = reading ? [
+                      { label: t('reading.sajuReading'), value: reading.sajuReading },
+                      { label: t('reading.coreNature'), value: reading.coreNature },
+                      { label: t('reading.lifeWorkFlow'), value: reading.lifeWorkFlow },
+                      { label: t('reading.relationshipPattern'), value: reading.relationshipPattern },
+                      { label: t('reading.guidance'), value: reading.guidance },
+                    ].filter(b => b.value) : [];
+
+                    return (
+                      <div key={i} className={`mypage-result-item${isExpanded ? ' is-expanded' : ''}`}>
+                        <button
+                          type="button"
+                          className="mypage-result-header"
+                          onClick={() => setExpandedResult(isExpanded ? null : i)}
+                        >
+                          <div className="result-item-info">
+                            <strong style={{ color: '#d4b068', fontSize: '1.1rem' }}>{res.input?.name || t('common.guest')}</strong>
+                            <span className="result-item-date">{formatTimestamp(res.savedAt, language)}</span>
+                          </div>
+                          <div className="result-item-summary">
+                            <span className="day-master-badge">{res.data?.dayMaster}</span>
+                            <p style={{ lineHeight: '1.6' }}>
+                              {reading?.coreNature
+                                ? (isExpanded ? reading.coreNature : reading.coreNature.slice(0, 80) + (reading.coreNature.length > 80 ? '...' : ''))
+                                : ''}
+                            </p>
+                          </div>
+                          <span className="mypage-result-toggle">{isExpanded ? '▲' : '▼'}</span>
+                        </button>
+
+                        {isExpanded && readingBlocks.length > 0 && (
+                          <div className="mypage-result-detail">
+                            {readingBlocks.map((block) => (
+                              <div className="mypage-reading-block" key={block.label}>
+                                <span className="mypage-reading-label">{block.label}</span>
+                                <p className="mypage-reading-value">{block.value}</p>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                       </div>
-                      <div className="result-item-summary">
-                        <span className="day-master-badge">{res.data?.dayMaster}</span>
-                        <p style={{ lineHeight: '1.6' }}>{res.data?.reading?.guidance || res.data?.reading?.coreNature}</p>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               ) : (
                 <p style={{ color: 'var(--muted)', padding: '20px 0' }}>{t('mypage.resultsEmpty')}</p>

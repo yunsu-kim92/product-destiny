@@ -66,6 +66,8 @@ function App() {
   const [route, setRoute] = useState(getCurrentRoute);
   const [formData, setFormData] = useState({ name: '', birthdate: '', birthtime: '', gender: '', language: DEFAULT_LANGUAGE, consent: false });
   const [loading, setLoading] = useState(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
+  const [loadingStage, setLoadingStage] = useState(0);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
   const [result, setResult] = useState(null);
@@ -193,6 +195,23 @@ function App() {
     if (!validation.isValid) { setError(validation.errors[0]); return; }
 
     setLoading(true);
+    setLoadingProgress(0);
+    setLoadingStage(0);
+
+    const progressSteps = [
+      { target: 15, stage: 0, delay: 400 },
+      { target: 35, stage: 1, delay: 1200 },
+      { target: 55, stage: 2, delay: 2400 },
+      { target: 75, stage: 3, delay: 4000 },
+      { target: 90, stage: 4, delay: 6000 },
+    ];
+    const timers = progressSteps.map((step) =>
+      setTimeout(() => {
+        setLoadingProgress(step.target);
+        setLoadingStage(step.stage);
+      }, step.delay)
+    );
+
     try {
       const res = await fetch('/api/analyze-free', {
         method: 'POST',
@@ -208,15 +227,19 @@ function App() {
         throw new Error('API FAIL');
       }
     } catch {
-      // FORCE MOCK ON ANY ERROR
       const res = await mockAnalyze(formData);
       setResult(res);
       setSubmittedName(formData.name);
       setCachedAnalysis(formData, res);
       setNotice(t('fallbackNotice'));
     } finally {
-      setLoading(false);
-      resultsSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+      timers.forEach(clearTimeout);
+      setLoadingProgress(100);
+      setLoadingStage(4);
+      setTimeout(() => {
+        setLoading(false);
+        resultsSectionRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 500);
     }
   };
 
@@ -379,7 +402,7 @@ function App() {
           <QuickAnswersSection t={t} />
           <section className="section" id="start" ref={formSectionRef}>
             <div className="service-grid">
-              <DestinyForm t={t} formData={formData} loading={loading} error={error} notice={notice} onChange={handleFormChange} onSubmit={handleFormSubmit} onSecondaryAction={() => resultsSectionRef.current?.scrollIntoView({ behavior: 'smooth' })} />
+              <DestinyForm t={t} formData={formData} loading={loading} loadingProgress={loadingProgress} loadingStage={loadingStage} error={error} notice={notice} onChange={handleFormChange} onSubmit={handleFormSubmit} onSecondaryAction={() => resultsSectionRef.current?.scrollIntoView({ behavior: 'smooth' })} />
               <ServiceFlowCard t={t} />
             </div>
           </section>

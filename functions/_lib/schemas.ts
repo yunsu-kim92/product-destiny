@@ -81,11 +81,11 @@ export const freeReadingSchema = {
     'fullReportLocked',
   ],
   properties: {
-    sajuReading: { type: 'string', minLength: 1, maxLength: 800 },
-    coreNature: { type: 'string', minLength: 1, maxLength: 500 },
-    lifeWorkFlow: { type: 'string', minLength: 1, maxLength: 500 },
-    relationshipPattern: { type: 'string', minLength: 1, maxLength: 500 },
-    guidance: { type: 'string', minLength: 1, maxLength: 500 },
+    sajuReading: { type: 'string', minLength: 1, maxLength: 1500 },
+    coreNature: { type: 'string', minLength: 1, maxLength: 1000 },
+    lifeWorkFlow: { type: 'string', minLength: 1, maxLength: 1000 },
+    relationshipPattern: { type: 'string', minLength: 1, maxLength: 1000 },
+    guidance: { type: 'string', minLength: 1, maxLength: 800 },
     fullReportLocked: { type: 'boolean', const: true },
   },
 } as const;
