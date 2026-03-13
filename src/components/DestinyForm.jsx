@@ -126,7 +126,6 @@ function DestinyForm({
                 value={timeParts.period}
                 onChange={(event) => handleTimePartChange('period', event.target.value)}
               >
-                <option value="">{t('form.periodPlaceholder')}</option>
                 <option value="am">{t('common.am')}</option>
                 <option value="pm">{t('common.pm')}</option>
               </select>
@@ -191,7 +190,7 @@ function DestinyForm({
             >
               {LANGUAGES.map((option) => (
                 <option key={option.value} value={option.value}>
-                  {t(option.labelKey)}
+                  {option.label}
                 </option>
               ))}
             </select>

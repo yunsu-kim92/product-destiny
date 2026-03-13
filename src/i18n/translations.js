@@ -1,9 +1,9 @@
 export const DEFAULT_LANGUAGE = 'ko';
 
 export const LANGUAGES = [
-  { value: 'ko', labelKey: 'language.ko' },
-  { value: 'en', labelKey: 'language.en' },
-  { value: 'ja', labelKey: 'language.ja' },
+  { value: 'ko', label: '한국어' },
+  { value: 'en', label: 'English' },
+  { value: 'ja', label: '日本語' },
 ];
 
 export const translations = {
