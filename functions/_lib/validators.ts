@@ -8,6 +8,8 @@ export type Env = {
   OPENAI_FREE_PROMPT_VERSION?: string;
   OPENAI_PROMPT_ID?: string;
   OPENAI_PROMPT_VERSION?: string;
+  SUPABASE_URL?: string;
+  SUPABASE_SERVICE_ROLE_KEY?: string;
 };
 
 export type AnalysisRequest = {

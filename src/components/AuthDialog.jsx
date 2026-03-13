@@ -5,38 +5,26 @@ const initialFields = {
   password: '',
 };
 
+const GoogleIcon = () => (
+  <svg width="18" height="18" viewBox="0 0 48 48" style={{ marginRight: '8px', flexShrink: 0 }}>
+    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+    <path fill="#FBBC05" d="M10.53 28.59a14.5 14.5 0 0 1 0-9.18l-7.98-6.19a24.0 24.0 0 0 0 0 21.56l7.98-6.19z"/>
+    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+  </svg>
+);
+
 function mapAuthErrorMessage(error, t) {
   const message =
     error instanceof Error && error.message ? error.message.toLowerCase().trim() : '';
 
-  if (!message) {
-    return t('auth.genericError');
-  }
-
-  if (message.includes('email rate limit exceeded')) {
-    return t('auth.errorEmailRateLimit');
-  }
-
-  if (message.includes('email not confirmed')) {
-    return t('auth.errorEmailNotConfirmed');
-  }
-
-  if (message.includes('invalid login credentials')) {
-    return t('auth.errorInvalidCredentials');
-  }
-
-  if (message.includes('password should be at least')) {
-    return t('auth.errorWeakPassword');
-  }
-
-  if (message.includes('user already registered')) {
-    return t('auth.errorAlreadyRegistered');
-  }
-
-  if (message.includes('invalid email')) {
-    return t('auth.errorInvalidEmail');
-  }
-
+  if (!message) return t('auth.genericError');
+  if (message.includes('email rate limit exceeded')) return t('auth.errorEmailRateLimit');
+  if (message.includes('email not confirmed')) return t('auth.errorEmailNotConfirmed');
+  if (message.includes('invalid login credentials')) return t('auth.errorInvalidCredentials');
+  if (message.includes('password should be at least')) return t('auth.errorWeakPassword');
+  if (message.includes('user already registered')) return t('auth.errorAlreadyRegistered');
+  if (message.includes('invalid email')) return t('auth.errorInvalidEmail');
   return error.message;
 }
 
@@ -45,15 +33,15 @@ function AuthDialog({
   isOpen,
   authReady,
   authEnabled,
-  user,
   onClose,
   onSignIn,
   onSignInWithGoogle,
   onSignUp,
-  onSignOut,
+  onRequestPasswordReset,
 }) {
   const [mode, setMode] = useState('signin');
   const [fields, setFields] = useState(initialFields);
+  const [resetEmail, setResetEmail] = useState('');
   const [pending, setPending] = useState(false);
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
@@ -62,6 +50,7 @@ function AuthDialog({
     if (!isOpen) {
       setMode('signin');
       setFields(initialFields);
+      setResetEmail('');
       setPending(false);
       setError('');
       setNotice('');
@@ -69,35 +58,25 @@ function AuthDialog({
   }, [isOpen]);
 
   useEffect(() => {
-    if (!isOpen) {
-      return undefined;
-    }
-
+    if (!isOpen) return undefined;
     const handleEscape = (event) => {
-      if (event.key === 'Escape') {
-        onClose();
-      }
+      if (event.key === 'Escape') onClose();
     };
-
     window.addEventListener('keydown', handleEscape);
     return () => window.removeEventListener('keydown', handleEscape);
   }, [isOpen, onClose]);
 
-  if (!isOpen) {
-    return null;
-  }
+  if (!isOpen) return null;
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setPending(true);
     setError('');
     setNotice('');
-
     try {
       const action = mode === 'signin' ? onSignIn : onSignUp;
       const message = await action(fields.email, fields.password);
       setNotice(message);
-
       if (mode === 'signin') {
         setFields(initialFields);
         onClose();
@@ -109,13 +88,13 @@ function AuthDialog({
     }
   };
 
-  const handleSignOut = async () => {
+  const handleResetSubmit = async (event) => {
+    event.preventDefault();
     setPending(true);
     setError('');
     setNotice('');
-
     try {
-      const message = await onSignOut();
+      const message = await onRequestPasswordReset(resetEmail);
       setNotice(message);
     } catch (submissionError) {
       setError(mapAuthErrorMessage(submissionError, t));
@@ -128,12 +107,9 @@ function AuthDialog({
     setPending(true);
     setError('');
     setNotice('');
-
     try {
       const message = await onSignInWithGoogle();
-      if (message) {
-        setNotice(message);
-      }
+      if (message) setNotice(message);
     } catch (submissionError) {
       setError(mapAuthErrorMessage(submissionError, t));
       setPending(false);
@@ -153,10 +129,10 @@ function AuthDialog({
           <div>
             <span className="section-kicker">{t('auth.kicker')}</span>
             <h2 className="section-title" id="auth-dialog-title">
-              {user ? t('auth.accountTitle') : t('auth.modalTitle')}
+              {mode === 'forgot' ? t('mypage.forgotTitle') : t('auth.modalTitle')}
             </h2>
             <p className="section-subtitle">
-              {user ? t('auth.accountSubtitle') : t('auth.modalSubtitle')}
+              {mode === 'forgot' ? t('mypage.forgotDesc') : t('auth.modalSubtitle')}
             </p>
           </div>
           <button className="auth-close" type="button" onClick={onClose} aria-label={t('auth.close')}>
@@ -173,17 +149,37 @@ function AuthDialog({
           <div className="auth-message-block">
             <strong>{t('auth.loading')}</strong>
           </div>
-        ) : user ? (
-          <div className="auth-session-card">
-            <div className="auth-user-line">
-              <span>{t('auth.loggedInAs')}</span>
-              <strong>{user.email}</strong>
-            </div>
-            {notice ? <div className="auth-notice">{notice}</div> : null}
-            {error ? <div className="error-box is-visible">{error}</div> : null}
-            <button className="btn btn-secondary" type="button" onClick={handleSignOut} disabled={pending}>
-              {pending ? t('auth.pending') : t('auth.logout')}
-            </button>
+        ) : mode === 'forgot' ? (
+          <div className="auth-forgot-section">
+            <form className="auth-form" onSubmit={handleResetSubmit}>
+              <label className="field-group">
+                <span className="field-label">{t('auth.email')}</span>
+                <input
+                  className="field-input"
+                  type="email"
+                  autoComplete="email"
+                  placeholder={t('auth.emailPlaceholder')}
+                  value={resetEmail}
+                  onChange={(event) => setResetEmail(event.target.value)}
+                  required
+                />
+              </label>
+
+              {notice ? <div className="auth-notice">{notice}</div> : null}
+              {error ? <div className="error-box is-visible">{error}</div> : null}
+
+              <button className="btn btn-primary" type="submit" disabled={pending}>
+                {pending ? t('auth.pending') : t('mypage.sendReset')}
+              </button>
+
+              <button
+                className="btn-text auth-back-link"
+                type="button"
+                onClick={() => setMode('signin')}
+              >
+                ← {t('auth.loginTab')}
+              </button>
+            </form>
           </div>
         ) : (
           <>
@@ -194,9 +190,9 @@ function AuthDialog({
                 onClick={handleGoogleSignIn}
                 disabled={pending}
               >
+                <GoogleIcon />
                 {pending ? t('auth.pending') : t('auth.googleLogin')}
               </button>
-              <p className="auth-social-note">{t('auth.googleHint')}</p>
             </div>
 
             <div className="auth-divider" aria-hidden="true">
@@ -209,7 +205,7 @@ function AuthDialog({
                 type="button"
                 role="tab"
                 aria-selected={mode === 'signin'}
-                onClick={() => setMode('signin')}
+                onClick={() => { setMode('signin'); setError(''); setNotice(''); }}
               >
                 {t('auth.loginTab')}
               </button>
@@ -218,7 +214,7 @@ function AuthDialog({
                 type="button"
                 role="tab"
                 aria-selected={mode === 'signup'}
-                onClick={() => setMode('signup')}
+                onClick={() => { setMode('signup'); setError(''); setNotice(''); }}
               >
                 {t('auth.signupTab')}
               </button>
@@ -263,6 +259,16 @@ function AuthDialog({
               <button className="btn btn-primary" type="submit" disabled={pending}>
                 {pending ? t('auth.pending') : mode === 'signin' ? t('auth.login') : t('auth.signup')}
               </button>
+
+              {mode === 'signin' && (
+                <button
+                  className="btn-text auth-forgot-link"
+                  type="button"
+                  onClick={() => { setMode('forgot'); setError(''); setNotice(''); }}
+                >
+                  {t('mypage.forgotTitle')}
+                </button>
+              )}
             </form>
           </>
         )}

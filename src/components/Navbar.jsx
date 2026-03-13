@@ -1,5 +1,5 @@
-import { LANGUAGES } from '../i18n/translations.js';
 import AppLink from './AppLink.jsx';
+import { LANGUAGES } from '../i18n/translations.js';
 
 function Navbar({
   language,
@@ -7,12 +7,8 @@ function Navbar({
   t,
   isSubpage = false,
   onNavigate,
-  authEnabled = false,
   authUser = null,
-  onOpenAuth,
 }) {
-  const homePrefix = isSubpage ? '/#' : '#';
-
   return (
     <nav className="nav">
       <AppLink className="brand" href={isSubpage ? '/' : '#top'} onNavigate={onNavigate}>
@@ -22,26 +18,23 @@ function Navbar({
 
       <div className="nav-right">
         <div className="nav-links">
-          <a href={`${homePrefix}start`}>{t('nav.analyze')}</a>
-          <a href={`${homePrefix}guide`}>{t('nav.guide')}</a>
-          <a href={`${homePrefix}results`}>{t('nav.results')}</a>
-          <AppLink href="/about" onNavigate={onNavigate}>
-            {t('nav.about')}
-          </AppLink>
-          <a href={`${homePrefix}partnership`}>{t('nav.partnership')}</a>
-          <a href={`${homePrefix}faq`}>{t('nav.faq')}</a>
-          <AppLink href="/privacy" onNavigate={onNavigate}>
-            {t('nav.policy')}
+          <a href="#start" onClick={(e) => { e.preventDefault(); onNavigate('/#start'); }}>{t('nav.analyze')}</a>
+          <AppLink href="/about" onNavigate={onNavigate}>{t('nav.about')}</AppLink>
+          <AppLink href="/privacy" onNavigate={onNavigate}>{t('nav.policy')}</AppLink>
+        </div>
+
+        <div className="nav-auth-group">
+          <AppLink
+            className={`auth-trigger${authUser ? ' is-logged-in' : ''}`}
+            href="/mypage"
+            onNavigate={onNavigate}
+          >
+            {authUser ? t('mypage.open') : t('auth.openLogin')}
           </AppLink>
         </div>
 
-        <button className="auth-trigger" type="button" onClick={onOpenAuth}>
-          {authUser ? authUser.email : authEnabled ? t('auth.openLogin') : t('auth.unavailable')}
-        </button>
-
         <select
           className="language-select"
-          aria-label={t('nav.languageLabel')}
           value={language}
           onChange={(event) => setLanguage(event.target.value)}
         >

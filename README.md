@@ -22,25 +22,28 @@ Email/password sign-up and login are wired with `@supabase/supabase-js`, and the
 
 1. Copy `.env.example` to `.env.local`
 2. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY`
-3. Initialize Supabase once:
+3. For account deletion in Cloudflare Functions, also set `SUPABASE_URL` and `SUPABASE_SERVICE_ROLE_KEY` in `.dev.vars` and your deployment secrets
+4. Initialize Supabase once:
 
 ```bash
 npm run supabase:init
 ```
 
-4. Start the local stack when Docker is available:
+5. Start the local stack when Docker is available:
 
 ```bash
 npm run supabase:start
 ```
 
-5. Check local URLs and keys:
+6. Check local URLs and keys:
 
 ```bash
 npm run supabase:status
 ```
 
 If the Vite auth env vars are missing, the app still renders but the auth dialog explains that Supabase has not been configured yet. The client now expects `VITE_SUPABASE_PUBLISHABLE_KEY` and still accepts `VITE_SUPABASE_ANON_KEY` as a fallback for compatibility.
+
+Account deletion is intentionally handled server-side through [`functions/api/account-delete.ts`](/home/user/productdestiny/functions/api/account-delete.ts), because deleting a Supabase user requires the service role key and must not run in the browser.
 
 ### Google login
 

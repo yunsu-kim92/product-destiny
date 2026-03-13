@@ -109,3 +109,31 @@ export function clearAnalysisCache() {
     // Ignore storage access failures.
   }
 }
+
+export function getRecentCachedAnalyses() {
+  if (isLocalPreview()) {
+    return [];
+  }
+
+  const store = readCacheStore();
+
+  return Object.entries(store)
+    .map(([key, entry]) => {
+      let input = null;
+
+      try {
+        input = JSON.parse(key);
+      } catch {
+        input = null;
+      }
+
+      return {
+        key,
+        savedAt: entry?.savedAt || 0,
+        input,
+        data: entry?.data || null,
+      };
+    })
+    .filter((entry) => entry.data)
+    .sort((left, right) => right.savedAt - left.savedAt);
+}
