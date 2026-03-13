@@ -107,7 +107,7 @@ export async function requestStructuredOutput<T>(options: {
             ],
           },
         ],
-        max_output_tokens: options.maxOutputTokens ?? 1400,
+        max_output_tokens: options.maxOutputTokens ?? 2048,
         text: textFormat,
       }
     : {
@@ -132,7 +132,7 @@ export async function requestStructuredOutput<T>(options: {
             ],
           },
         ],
-        max_output_tokens: options.maxOutputTokens ?? 1400,
+        max_output_tokens: options.maxOutputTokens ?? 2048,
         text: textFormat,
       };
 
